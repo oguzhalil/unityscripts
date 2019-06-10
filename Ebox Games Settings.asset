@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d65e816cb9d6da418c495d1cb4542f9, type: 3}
   m_Name: Ebox Games Settings
   m_EditorClassIdentifier: 
-  GooglePlayGameServices: 0
-  PlayfabServices: 0
-  AdmobServices: 0
-  UnityAds: 0
+  googlePlayGameServices: 0
+  playfabServices: 0
+  admobServices: 0
+  unityAdsServices: 0
