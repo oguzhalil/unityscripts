@@ -1,0 +1,124 @@
+{
+  //Homepage
+  "att_def": "Attacker-Defender",
+  "shoot_race": "Shooting Race",
+  "collect": "collect",
+  "free_rewards": "Free Rewards",
+  "tap_unlock": "Tap To Unlock!",
+  "play": "PLAY",
+  "shop": "shop",
+  "customize": "customize",
+  "loot_bag": "loot bag",
+
+  //Customize
+  "back": "back",
+
+  //Rooms
+  "prize": "prize",
+  "entry_fee": "Entry Fee",
+  "p_online": "Players Online",
+  "score": "Score",
+  "second": "Second",
+  "need_money_room": "Not enough points! \nGet Some!",
+
+  //Reward Page
+  "freecash": "Free Cash",
+  "collect_in": "collect in",
+  "login_fb_for": "Login on \nFacebook for",
+  "get_more": "get more rewards!",
+  "watch_video": "watch video",
+  "notification_title": "Your daily gift is ready! \n Get Your Free Points.",
+  "ready": "READY!",
+
+  //Loot Bag
+  "unlock": "unlock",
+  "open_now": "open now",
+  "empty": "EMPTY",
+  "open_your_bag": "OPEN YOUR BAG",
+  "use": "USE",
+  "Standarddesc": "Contains 1 Rare",
+  "Standardpoints": "400",
+  "Standardtickets": "1",
+
+  "Premiumdesc": "Contains 1 Rare",
+  "Premiumpoints": "800",
+  "Premiumtickets": "5",
+
+  "Vipdesc": "Contains 1 Rare",
+  "Vippoints": "1200",
+  "Viptickets": "10",
+
+
+  // versus
+  "searching": "SEARCHING",
+
+  // Options
+  "settings": "settings",
+  "sound": "Sound",
+  "music": "Music",
+  "language": "Language",
+  "policy": "Privacy Policy",
+  "terms": "Terms and Condition",
+  "account": "account",
+  // profile
+  "user_id": "User Id",
+  "earning": "Total Winnings",
+  "games_won": "Games Won",
+  "total_played": "Total Games Played",
+  "win_rate": "Win Rate",
+  "basket_score": "Baskets Scored",
+  "shooting_record": "Shooting Race Record",
+
+  // shop
+  "cash": "CASH",
+  "ticket": "TICKET",
+  "bags": "BAGS",
+  "deals": "BALLS",
+  "noads": "NOADS",
+
+  // leaderboard
+  "monthly": "Monthly",
+  "loading": "loading",
+  "sign_as_guest": "Sign in as Guest",
+  "sign_in": "SIGN-IN",
+
+  "okay": "OKAY",
+  "error": "Something Went Wrong!",
+  "owned": "Owned",
+  "logout": "LOG OUT",
+
+  // gameplay
+  "you_win": "You WIN!",
+  "you_lose": "You LOSE!",
+  "draw": "Draw",
+
+  // fb login prompt
+  "log_wi_fb": "LOGIN WITH FACEBOOK",
+  "get_exclusive": "Get These exclusive benefits",
+  "exclusives": "- 15 Ticket\n- Play with friends\nLogin across devices!",
+
+
+  // friends page
+  "should_log_fb": "You should loggin facebook.",
+  "no_online": "No Online Friend",
+  "invited_to": "Invited to",
+
+  "accept": "ACCEPT",
+  "decline": "DECLINE",
+
+  // in game notification
+  "block": "BLOCK!",
+  "steal": "STEAL!",
+  "timeout": "TIMEOUT!",
+  "miss": "MISS!",
+  "basket": "SCORE!",
+  "continue": "CONTINUE",
+  "quit": "QUIT",
+
+  // Tutorial
+  "step_01": "Welcome to Basketball Master 3D",
+  "step_02": "Drag your finger to fill the bar",
+  "step_03": "Score 3 basket",
+  "step_04": "You are ready!",
+  "tap_to_continue": "Tap To Continue!"
+}
