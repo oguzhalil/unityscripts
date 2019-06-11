@@ -38,7 +38,7 @@ namespace EboxGames
         private void Update ()
         {
             m_SceneLoaderProgress.Invoke( m_AsyncSceneLoader.progress / 0.9f );
-
+            print( m_AsyncSceneLoader.progress / 0.9f );
             if ( m_DotAnimation && Time.time > m_DotTimer)
             {
                 m_LabelLoading.text = m_DotAnimationString + new string( '.' , m_Dots );
