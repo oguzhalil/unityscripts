@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIMatchmaker : UIElement
+public class UIMatchmaker 
 {
     public Text remoteNickname;
     public Text timerLabel;
@@ -77,8 +77,5 @@ public class UIMatchmaker : UIElement
         }
     }
 
-    public override Type DerivedType()
-    {
-        return GetType();
-    }
+ 
 }

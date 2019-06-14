@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Panel : MonoBehaviour
 {
-    public ExposeElement[] exposeElements;
+    public UIElem [] elems;
 
     public string id;
 
@@ -16,12 +16,12 @@ public class Panel : MonoBehaviour
         canvas = GetComponent<Canvas>();
     }
 
-    public void Hide()
+    public void Hide ()
     {
         gameObject.SetActive( false );
     }
 
-    public void Show()
+    public void Show ()
     {
         gameObject.SetActive( true );
     }

@@ -6,9 +6,9 @@ public class EC<T> where T : Component
 {
     public T value;
     public string id;
-    public ExposeElement exposeElement;
+    public UIElem exposeElement;
 
-    public EC(ExposeElement exposeElement )
+    public EC(UIElem exposeElement )
     {
         this.value = exposeElement.component as T;
         this.exposeElement = exposeElement;

@@ -1,15 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ExposeElement : MonoBehaviour
+public class UIElem : MonoBehaviour
 {
     public string id;
     public Component component;
-    public List< ExtraEE> extraComponents;
+    public List<ExtraEE> extraComponents;
 
-    public readonly Dictionary<string, Component> cache = new Dictionary<string, Component>();
+    public readonly Dictionary<string , Component> cache = new Dictionary<string , Component>();
 
     public T Get<T> () where T : Component
     {
@@ -23,5 +24,10 @@ public class ExposeElement : MonoBehaviour
 
         return null;
 
+    }
+
+    public bool IdEqual ( string v )
+    {
+        return v == id;
     }
 }

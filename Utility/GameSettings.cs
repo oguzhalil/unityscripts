@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using EboxGames;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameSettings : MonoBehaviour
+public class GameSettings : Singleton<GameSettings>
 {
     public enum VSync
     {
@@ -16,8 +17,9 @@ public class GameSettings : MonoBehaviour
     public float m_TargetFrameRate;
     public bool m_ShowFPS;
 
-    private void Awake ()
+    protected override void Awake ()
     {
+        base.Awake();
         SetBuffer( m_vSync );
     }
 
@@ -47,5 +49,10 @@ public class GameSettings : MonoBehaviour
             GUI.skin.box.fontSize = 35;
             GUILayout.Label( string.Format( "FPS : {0:0.#}" , 1.0f / Time.deltaTime ) , GUI.skin.box );
         }
+    }
+
+    public override bool DontDestroyWhenLoad ()
+    {
+        return true;
     }
 }

@@ -1,85 +1,87 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using EboxGames;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using EboxGames;
 
-//public class UIBox : Singleton<UIBox>
-//{
-//    [SerializeField] private Page currentPage;
+public class UIBox : Singleton<UIBox>
+{
+    [SerializeField] private Page currentPage;
+    private Stack<Page> previousPages = new Stack<Page>();
+    public int bufferSize = 3;
+    public EnumMonoDictionary m_PairPages;
 
-//    Stack<Page> previousPages = new Stack<Page>();
+    public static UIElem GetExposure ( Page page , string elementId )
+    {
+        foreach ( var panel in page.panels )
+        {
+            foreach ( var exposedElement in panel.elems )
+            {
+                if ( exposedElement.id == elementId )
+                    return exposedElement;
+            }
+        }
 
-//    public int bufferSize = 3;
+        return null;
 
-//    public EnumPage pairPages;
+    }
 
-//    public static ExposeElement GetExposure ( Page page , string elementId )
-//    {
-//        foreach ( var panel in page.panels )
-//        {
-//            foreach ( var exposedElement in panel.exposeElements )
-//            {
-//                if ( exposedElement.id == elementId )
-//                    return exposedElement;
-//            }
-//        }
+    public void PreviousPage ()
+    {
+        var previousPage = previousPages.Pop();
 
-//        return null;
+        currentPage.Hide();
+        previousPage.Show();
 
-//    }
+        currentPage = previousPage;
+    }
 
-//    public void PreviousPage ()
-//    {
-//        var previousPage = previousPages.Pop();
+    public void ChangePage ( Page newPage )
+    {
+        var previousPage = currentPage;
+        currentPage = newPage;
 
-//        currentPage.Hide();
-//        previousPage.Show();
+        previousPage.Hide();
+        currentPage.Show();
 
-//        currentPage = previousPage;
-//    }
+        if ( previousPages.Count > bufferSize ) // if out buffer is more than bufferSize dump the latest one
+            previousPages.Pop();
 
-//    public void ChangePage ( Page newPage )
-//    {
-//        var previousPage = currentPage;
-//        currentPage = newPage;
+        previousPages.Push( previousPage );
 
-//        previousPage.Hide();
-//        currentPage.Show();
+    }
 
-//        if ( previousPages.Count > bufferSize ) // if out buffer is more than bufferSize dump the latest one
-//            previousPages.Pop();
+    public void ChangePage ( Pages page )
+    {
+        if ( !m_PairPages.ContainsKey( page ) )
+        {
+            Debug.LogError( GetType().Name + ".cs  method id : ChangePage()" );
+            return;
+        }
 
-//        previousPages.Push( previousPage );
+        var previousPage = currentPage;
+        currentPage = m_PairPages [ page ] as Page;
 
-//    }
+        if ( previousPage == currentPage )
+            return;
 
-//    public void ChangePage ( Pages page )
-//    {
-//        if ( !pairPages.ContainsKey( page ) )
-//        {
-//            Debug.LogError( GetType().Name + ".cs  method id : ChangePage()" );
-//            return;
-//        }
+        previousPage.Hide();
+        currentPage.Show();
 
-//        var previousPage = currentPage;
-//        currentPage = pairPages [ page ];
+        if ( previousPages.Count > bufferSize ) // if out buffer is more than bufferSize dump the latest one
+            previousPages.Pop();
 
-//        if ( previousPage == currentPage )
-//            return;
+        previousPages.Push( previousPage );
+    }
 
-//        previousPage.Hide();
-//        currentPage.Show();
+    private void OnGUI ()
+    {
+        //GUILayout.Label( "Stack : " + previousPages.Count , GUI.skin.box );
+    }
 
-//        if ( previousPages.Count > bufferSize ) // if out buffer is more than bufferSize dump the latest one
-//            previousPages.Pop();
+    public override bool DontDestroyWhenLoad ()
+    {
+        return false;
+    }
+}
 
-//        previousPages.Push( previousPage );
-//    }
-
-//    private void OnGUI ()
-//    {
-//        //GUILayout.Label( "Stack : " + previousPages.Count , GUI.skin.box );
-//    }
-//}
-
-//public enum Pages { Homepage = 0, Customize = 1, Shop = 2, Profile = 3, Rooms = 4, Options = 5, Leaderboard = 6, LootBag = 7, Rewards = 8, Versus = 9, Friends = 10, Facebook = 11 }
+public enum Pages { Homepage = 0, Customize = 1, Shop = 2, Profile = 3, Rooms = 4, Settings = 5, Leaderboard = 6, LootBag = 7, Rewards = 8, Versus = 9, Friends = 10, Facebook = 11 }

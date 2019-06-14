@@ -10,7 +10,7 @@ public class PanelInspector : Editor
     {
         EditorGUILayout.PropertyField( serializedObject.FindProperty( "id" ) );
 
-        DrawExposeElement( serializedObject.FindProperty( "exposeElements" ) );
+        DrawExposeElement( serializedObject.FindProperty( "elems" ) );
 
 
         serializedObject.ApplyModifiedProperties();
@@ -18,7 +18,7 @@ public class PanelInspector : Editor
         if ( GUILayout.Button( "Update") )
         {
             Panel panel = target as Panel;
-            panel.exposeElements = panel.GetComponentsInChildren<ExposeElement>( true );
+            panel.elems = panel.GetComponentsInChildren<UIElem>( true );
         }
     }
 

@@ -11,7 +11,7 @@ public static class UIBoxExtensions
         ec.value.onClick.AddListener( delegate { action( ec.value , ec.id ); } );
     }
 
-    public static T GetExtraComponent<T> ( this ExposeElement elem , string id ) where T : Component
+    public static T GetExtraComponent<T> ( this UIElem elem , string id ) where T : Component
     {
         if ( elem.cache.ContainsKey( id ) )
         {
