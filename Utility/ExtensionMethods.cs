@@ -38,11 +38,18 @@ public static class ExtensionMethods
 		transform.position = position;
 	}
 
-	//public static string GetMemberName<T>(Expression<Func<T>> memberExpression)
- //   {
- //       MemberExpression expressionBody = (MemberExpression)memberExpression.Body;
- //       return expressionBody.Member.Name;
- //   }
+    public static T RandomElement <T>(this T [] array )
+    {
+        int index = Random.Range( 0 , array.Length );
+
+        return array [ index ];
+    }
+
+    //public static string GetMemberName<T>(Expression<Func<T>> memberExpression)
+    //   {
+    //       MemberExpression expressionBody = (MemberExpression)memberExpression.Body;
+    //       return expressionBody.Member.Name;
+    //   }
 
 
 }
