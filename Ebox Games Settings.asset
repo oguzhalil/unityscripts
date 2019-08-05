@@ -16,3 +16,4 @@ MonoBehaviour:
   playfabServices: 0
   admobServices: 0
   unityAdsServices: 0
+  loggerEnabled: 1

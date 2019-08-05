@@ -21,4 +21,14 @@ public class TestLauncherTask : LauncherTask
     {
         return m_IsDone;
     }
+
+    public override bool IsError ()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Run ()
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -9,4 +9,5 @@ public class EboxGamesSettings : ScriptableObject
     public bool playfabServices;
     public bool admobServices;
     public bool unityAdsServices;
+    public bool loggerEnabled;
 }

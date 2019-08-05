@@ -6,6 +6,12 @@ namespace EboxGames
     {
         public static bool Write(string key, object obj, bool encrypt = false) 
         {
+            if(obj is string)
+            {
+                Logger.Error( $"Store.Write() given object is string. It must be pure C# class. {obj}" );
+                return false;
+            }
+
             if (encrypt)
                 PlayerPrefs.SetString(key, ToEncodedJSON(obj));
             else

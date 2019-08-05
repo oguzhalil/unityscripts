@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 
-namespace PabloGames
+namespace EboxGames
 {
     public class Report : MonoBehaviour
     {

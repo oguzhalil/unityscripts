@@ -84,4 +84,4 @@ public class UIBox : Singleton<UIBox>
     }
 }
 
-public enum Pages { Homepage = 0, Customize = 1, Shop = 2, Profile = 3, Rooms = 4, Settings = 5, Leaderboard = 6, LootBag = 7, Rewards = 8, Versus = 9, Friends = 10, Facebook = 11 }
+public enum Pages { Homepage = 0, Company = 1, Spin = 2, Rank = 3, DailyGift = 4, Garage = 5, Map = 6 , Store = 7 , Settings = 8, Currency = 9  }

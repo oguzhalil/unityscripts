@@ -11,12 +11,15 @@ public class EboxGamesSettingsEditor : Editor
     public SerializedProperty playfabServices;
     public SerializedProperty admobServices;
     public SerializedProperty unityAdsServices;
+    public SerializedProperty loggerEnabled;
+
     private EboxGamesSettings settings;
     private string defineSymbols;
     public const string symbolAdmob = "ADMOB";
     public const string symbolUnityAds = "UNITY_ADS";
     public const string symbolGPGS = "GPGS";
     public const string symbolPlayfab = "PLAYFAB";
+    public const string symbolLogger = "ENABLE_LOGS";
 
     public override void OnInspectorGUI ()
     {
@@ -24,11 +27,13 @@ public class EboxGamesSettingsEditor : Editor
         bool bPlayfab = playfabServices.boolValue;
         bool bAdmob = admobServices.boolValue;
         bool bUnityAds = unityAdsServices.boolValue;
+        bool bLogger = loggerEnabled.boolValue;
 
         EditorGUILayout.PropertyField( googlePlayGameServices );
         EditorGUILayout.PropertyField( playfabServices );
         EditorGUILayout.PropertyField( admobServices );
         EditorGUILayout.PropertyField( unityAdsServices );
+        EditorGUILayout.PropertyField( loggerEnabled );
 
         serializedObject.ApplyModifiedProperties();
         if ( bGoogle != googlePlayGameServices.boolValue )
@@ -50,6 +55,11 @@ public class EboxGamesSettingsEditor : Editor
         {
             ChangeSymbol( symbolUnityAds , unityAdsServices.boolValue );
         }
+
+        if(bLogger != loggerEnabled.boolValue)
+        {
+            ChangeSymbol( symbolLogger , loggerEnabled.boolValue );
+        }
     }
 
     private void OnEnable ()
@@ -59,7 +69,8 @@ public class EboxGamesSettingsEditor : Editor
         playfabServices = serializedObject.FindProperty( "playfabServices" );
         admobServices = serializedObject.FindProperty( "admobServices" );
         unityAdsServices = serializedObject.FindProperty( "unityAdsServices" );
-        defineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup( BuildTargetGroup.Standalone );
+        loggerEnabled = serializedObject.FindProperty( "loggerEnabled" );
+        defineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android );
     }
 
     void ChangeSymbol ( string symbol , bool action ) // def CROSS_PLATFORM_INPUT;BCG_RCC
@@ -96,7 +107,7 @@ public class EboxGamesSettingsEditor : Editor
             Debug.Log( elem );
         }
 
-        PlayerSettings.SetScriptingDefineSymbolsForGroup( BuildTargetGroup.Standalone , output);
+        PlayerSettings.SetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android , output);
         defineSymbols = output;
     }
 }

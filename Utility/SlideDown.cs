@@ -49,7 +49,7 @@ public class SlideDown : MonoBehaviour
 
         ExecuteEvents.Execute( m_Pairs [ m_SelectedIndex ].transform.gameObject , new BaseEventData( EventSystem.current ) , ExecuteEvents.submitHandler );
 
-        Debug.Log( "SlideDown.cs elapsed time " + ( Time.realtimeSinceStartup - NewBehaviourScript.time ) );
+        //Debug.Log( "SlideDown.cs elapsed time " + ( Time.realtimeSinceStartup - NewBehaviourScript.time ) );
     }
 
     private void OnPressed ( int index , Content content )

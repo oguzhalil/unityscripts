@@ -1,13 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System;
-using EboxGames;
-using UnityEngine.Events;
-using TMPro;
 
+// Basic scene loader script with dot animation
+// Launcher tasks are the task should complete before launching.
 namespace EboxGames
 {
     public class Launcher : MonoBehaviour
@@ -17,7 +14,7 @@ namespace EboxGames
         public bool m_AllowSceneActivation = true;
         public AsyncOperation m_AsyncSceneLoader;
         public LauncherTask [] m_LauncherTasks;
-        public TextMeshProUGUI m_LabelLoading;
+        public Text m_LabelLoading;
         public Slider.SliderEvent m_LoadingProgress;
         public bool m_DotAnimation;
         private int m_Dots = 0;
@@ -40,7 +37,7 @@ namespace EboxGames
         {
             if ( m_AsyncSceneLoader != null )
             {
-                float progress = ( (  (float)( m_NumCompletedTasks + 1 ) / (float)( m_LauncherTasks.Length + 1 ) )
+                float progress = ( ( ( float ) ( m_NumCompletedTasks + 1 ) / ( float ) ( m_LauncherTasks.Length + 1 ) )
                     + ( m_AsyncSceneLoader.progress / 0.9f ) ) / 2.0f;
                 m_LoadingProgress.Invoke( progress );
             }
@@ -61,11 +58,23 @@ namespace EboxGames
 
         public bool IsLauncherTaskComplete ()
         {
+            m_NumCompletedTasks = 0;
+
             for ( int i = 0; i < m_LauncherTasks.Length; i++ )
             {
                 LauncherTask launcherTask = m_LauncherTasks [ i ];
 
-                if ( !launcherTask.IsDone() )
+                if ( !launcherTask.m_bRunning )
+                {
+                    launcherTask.Run();
+                }
+
+                if ( launcherTask.IsError() )
+                {
+                    // show error
+                    break;
+                }
+                else if ( !launcherTask.IsDone() )
                 {
                     return false;
                 }
@@ -74,6 +83,7 @@ namespace EboxGames
                     m_NumCompletedTasks++;
                 }
             }
+
             return true;
         }
     }

@@ -26,3 +26,4 @@ public class MyClass
 public class QuaternionMyClassDictionary : SerializableDictionary<Quaternion , MyClass> { }
 
 [Serializable] public class EnumMonoDictionary : SerializableDictionary<Pages , MonoBehaviour> { }
+[Serializable] public class StringSpriteDictionary: SerializableDictionary<String, Sprite> { }
