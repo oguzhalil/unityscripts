@@ -5,10 +5,23 @@ using EboxGames;
 
 public class UIBox : Singleton<UIBox>
 {
-    [SerializeField] private Page currentPage;
+    public Page currentPage;
     private Stack<Page> previousPages = new Stack<Page>();
     public int bufferSize = 3;
     public EnumMonoDictionary m_PairPages;
+
+    private void Start ()
+    {
+        foreach ( var pair in m_PairPages )
+        {
+            if ( pair.Value.gameObject.activeInHierarchy )
+            {
+                currentPage = pair.Value.GetComponent<Page>();
+                break;
+            }
+
+        }
+    }
 
     public static UIElem GetExposure ( Page page , string elementId )
     {
@@ -54,7 +67,7 @@ public class UIBox : Singleton<UIBox>
     {
         if ( !m_PairPages.ContainsKey( page ) )
         {
-            Debug.LogError( GetType().Name + ".cs  method id : ChangePage()" );
+            Debug.LogError( GetType().Name + ".cs  method id : ChangePage() " + page );
             return;
         }
 
@@ -84,4 +97,4 @@ public class UIBox : Singleton<UIBox>
     }
 }
 
-public enum Pages { Homepage = 0, Company = 1, Spin = 2, Rank = 3, DailyGift = 4, Garage = 5, Map = 6 , Store = 7 , Settings = 8, Currency = 9  }
+public enum Pages { Homepage = 0, Company = 1, Spin = 2, Rank = 3, DailyGift = 4, Garage = 5, Map = 6, Store = 7, Settings = 8, Currency = 9 }

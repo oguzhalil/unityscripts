@@ -10,17 +10,17 @@ public class ActivityEvent : MonoBehaviour
 
     private void OnEnable ()
     {
-        if ( DevelopmentScript.m_bWaitForAuth )
-        {
-            StartCoroutine( WaitAuth() );
-        }
-        else
-        {
+        //if ( DevelopmentScript.m_bWaitForAuth )
+        //{
+        //    StartCoroutine( WaitAuth() );
+        //}
+        //else
+        //{
             if ( m_actOnEnable != null )
             {
                 m_actOnEnable.Invoke();
             }
-        }
+        //}
     }
 
     private void OnDisable ()

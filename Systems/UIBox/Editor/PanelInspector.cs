@@ -12,7 +12,6 @@ public class PanelInspector : Editor
 
         DrawExposeElement( serializedObject.FindProperty( "elems" ) );
 
-
         serializedObject.ApplyModifiedProperties();
 
         if ( GUILayout.Button( "Update") )

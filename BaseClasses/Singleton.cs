@@ -11,20 +11,19 @@ namespace EboxGames
         protected virtual void Awake ()
         {
             if ( instance == null )
+            {
                 instance = this as T;
+            }
             else
+            {
                 Destroy( gameObject );
+            }
 
             if ( DontDestroyWhenLoad() )
             {
                 transform.SetParent( null );
                 DontDestroyOnLoad( gameObject );
             }
-        }
-
-        protected virtual void OnDestroy ()
-        {
-            instance = null;
         }
     }
 }

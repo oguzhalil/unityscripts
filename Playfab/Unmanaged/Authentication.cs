@@ -16,6 +16,7 @@ namespace EboxGames
 
         public override void Run ()
         {
+            m_bRunning = true;
             bool bStoredLogin = PlayerPrefs.HasKey( m_sPrefsKey );
 
             if ( bStoredLogin )

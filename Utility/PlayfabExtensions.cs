@@ -73,4 +73,38 @@ public static class PlayfabExtension
 
         return 0;
     }
+
+    public static int GetPrice ( this List<CatalogItem> catalogItems , string itemId )
+    {
+        for ( int i = 0; i < catalogItems.Count; i++ )
+        {
+            CatalogItem catalogItem = catalogItems [ i ];
+
+            if ( catalogItem.ItemId == itemId )
+            {
+                if ( catalogItem.VirtualCurrencyPrices.ContainsKey( Database.m_CodeCurrency ) )
+                {
+                    return ( int ) catalogItem.VirtualCurrencyPrices [ Database.m_CodeCurrency ];
+                }
+                else // virtual currency parameters can be empty
+                {
+                    return 0;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    public static string ToStringIds ( this List<ItemInstance> itemInstances )
+    {
+        string result = string.Empty;
+
+        for ( int i = 0; i < itemInstances.Count; i++ )
+        {
+            string.Concat( result , itemInstances [ i ].ItemId );
+        }
+
+        return result;
+    }
 }

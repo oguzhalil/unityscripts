@@ -41,7 +41,7 @@ public static class Util
     [MenuItem( "Tools/Create Language Asset" )]
     public static void CreateItems ()
     {
-        CreateAsset<LanguageAsset>();
+        CreateAsset<Languages>();
     }
 
     [MenuItem( "Tools/CreateJSON" )]

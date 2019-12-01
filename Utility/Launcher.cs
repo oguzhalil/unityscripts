@@ -26,11 +26,13 @@ namespace EboxGames
 
         private IEnumerator Start ()
         {
-            m_AsyncSceneLoader = SceneManager.LoadSceneAsync( m_SceneName );
-            m_AsyncSceneLoader.allowSceneActivation = false;
+            //m_AsyncSceneLoader = SceneManager.LoadSceneAsync( m_SceneName );
+            //m_AsyncSceneLoader.allowSceneActivation = false;
             //yield return new WaitUntil( () => ( m_AsyncSceneLoader.progress >= .9f && m_AsyncSceneLoader.isDone ) );
             yield return new WaitUntil( () => IsLauncherTaskComplete() );
-            m_AsyncSceneLoader.allowSceneActivation = m_AllowSceneActivation;
+            //m_AsyncSceneLoader.allowSceneActivation = m_AllowSceneActivation;
+
+            SceneController.Instance.LoadSceneFadeOut( 0 );
         }
 
         private void Update ()

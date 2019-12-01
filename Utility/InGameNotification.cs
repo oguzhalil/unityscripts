@@ -42,7 +42,7 @@ public class InGameNotification : Singleton<InGameNotification>
         {
             case NT_INFO:
             {
-                m_btnYes.gameObject.SetActive( true );
+                m_btnOk.gameObject.SetActive( true );
                 break;
             }
             case NT_ERR:
@@ -68,7 +68,9 @@ public class InGameNotification : Singleton<InGameNotification>
 
     private void OnPressedAct1 ()
     {
-        if( m_act1 != null )
+        m_goCanvas.SetActive( false );
+
+        if ( m_act1 != null )
         {
             m_act1.Invoke();
         }
@@ -76,7 +78,9 @@ public class InGameNotification : Singleton<InGameNotification>
 
     private void OnPressedAct2 ()
     {
-        if(m_act2 != null)
+        m_goCanvas.SetActive( false );
+
+        if ( m_act2 != null)
         {
             m_act2.Invoke();
         }
@@ -84,5 +88,4 @@ public class InGameNotification : Singleton<InGameNotification>
 
     public override bool DontDestroyWhenLoad () { return true; }
     protected override void Awake () { base.Awake(); }
-    protected override void OnDestroy () { base.OnDestroy(); }
 }

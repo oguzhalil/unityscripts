@@ -16,7 +16,6 @@ public class Page : MonoBehaviour
     public Panel panelDefault;
     private AnimationEvent animationEvent;
     private Animation animation;
-    public Page currentPage;
 
     void Awake ()
     {
