@@ -15,6 +15,7 @@ public class EboxGamesSettingsEditor : Editor
 
     private EboxGamesSettings settings;
     private string defineSymbols;
+
     public const string symbolAdmob = "ADMOB";
     public const string symbolUnityAds = "UNITY_ADS";
     public const string symbolGPGS = "GPGS";
@@ -23,91 +24,95 @@ public class EboxGamesSettingsEditor : Editor
 
     public override void OnInspectorGUI ()
     {
-        bool bGoogle = googlePlayGameServices.boolValue;
-        bool bPlayfab = playfabServices.boolValue;
-        bool bAdmob = admobServices.boolValue;
-        bool bUnityAds = unityAdsServices.boolValue;
-        bool bLogger = loggerEnabled.boolValue;
+        EditorGUI.BeginChangeCheck();
+        settings.googlePlayGameServices = EditorGUILayout.Toggle( "Google Play Services" , settings.googlePlayGameServices );
+        settings.playfabServices = EditorGUILayout.Toggle( "Playfab Services" , settings.playfabServices );
+        settings.admobServices = EditorGUILayout.Toggle( "Admob Services" , settings.admobServices );
+        settings.unityAdsServices = EditorGUILayout.Toggle( "Unity Ads Services" , settings.unityAdsServices );
+        settings.loggerEnabled = EditorGUILayout.Toggle( "Logger Enabled" , settings.loggerEnabled );
 
-        EditorGUILayout.PropertyField( googlePlayGameServices );
-        EditorGUILayout.PropertyField( playfabServices );
-        EditorGUILayout.PropertyField( admobServices );
-        EditorGUILayout.PropertyField( unityAdsServices );
-        EditorGUILayout.PropertyField( loggerEnabled );
+        if ( EditorGUI.EndChangeCheck() )
+        {
+            ChangeSymbol( settings );
+        }
 
         serializedObject.ApplyModifiedProperties();
-        if ( bGoogle != googlePlayGameServices.boolValue )
-        {
-            ChangeSymbol( symbolGPGS , googlePlayGameServices.boolValue );
-        }
-
-        if (bPlayfab != playfabServices.boolValue)
-        {
-            ChangeSymbol( symbolPlayfab , playfabServices.boolValue );
-        }
-
-        if (bAdmob  != admobServices.boolValue)
-        {
-            ChangeSymbol( symbolAdmob , admobServices.boolValue );
-        }
-
-        if (bUnityAds != unityAdsServices.boolValue)
-        {
-            ChangeSymbol( symbolUnityAds , unityAdsServices.boolValue );
-        }
-
-        if(bLogger != loggerEnabled.boolValue)
-        {
-            ChangeSymbol( symbolLogger , loggerEnabled.boolValue );
-        }
     }
 
     private void OnEnable ()
     {
         settings = target as EboxGamesSettings;
-        googlePlayGameServices = serializedObject.FindProperty( "googlePlayGameServices" );
-        playfabServices = serializedObject.FindProperty( "playfabServices" );
-        admobServices = serializedObject.FindProperty( "admobServices" );
-        unityAdsServices = serializedObject.FindProperty( "unityAdsServices" );
-        loggerEnabled = serializedObject.FindProperty( "loggerEnabled" );
-        defineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android );
+        //googlePlayGameServices = serializedObject.FindProperty( "googlePlayGameServices" );
+        //playfabServices = serializedObject.FindProperty( "playfabServices" );
+        //admobServices = serializedObject.FindProperty( "admobServices" );
+        //unityAdsServices = serializedObject.FindProperty( "unityAdsServices" );
+        //loggerEnabled = serializedObject.FindProperty( "loggerEnabled" );
+        //defineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android );
     }
 
-    void ChangeSymbol ( string symbol , bool action ) // def CROSS_PLATFORM_INPUT;BCG_RCC
+    private void ChangeSymbol ( EboxGamesSettings settings ) // def CROSS_PLATFORM_INPUT;BCG_RCC
     {
-        int n = defineSymbols.Length;
+        string symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android );
 
-        List<string> elems = new List<string>( defineSymbols.Split( ';'));
+        string [] seperatedSymbols = symbols.Split( ';' );
+        List<string> newSymbols = new List<string>();
 
-        for ( int i = elems.Count - 1; i >= 0; i-- )
+        if ( settings.googlePlayGameServices )
         {
-            if ( elems [ i ] == symbol )
+            newSymbols.Add( symbolGPGS );
+        }
+        if ( settings.unityAdsServices )
+        {
+            newSymbols.Add( symbolUnityAds );
+        }
+        if ( settings.admobServices )
+        {
+            newSymbols.Add( symbolAdmob );
+        }
+        if ( settings.loggerEnabled )
+        {
+            newSymbols.Add( symbolLogger );
+        }
+        if(settings.playfabServices)
+        {
+            newSymbols.Add( symbolPlayfab );
+        }
+
+
+        foreach ( var seperatedSymbol in seperatedSymbols )
+        {
+            switch ( seperatedSymbol )
             {
-                if ( action )
-                {
+                case symbolAdmob:
                     break;
-                }
-                else
-                {
-                    elems.RemoveAt( i );
-                }
-            }
-            else if(i == 0) // last element
-            {
-                if ( action )
-                    elems.Add( symbol );
+                case symbolUnityAds:
+                    break;
+                case symbolGPGS:
+                    break;
+                case symbolPlayfab:
+                    break;
+                case symbolLogger:
+                    break;
+                default:
+                    newSymbols.Add( seperatedSymbol );
+                    break;
             }
         }
 
-        string output = string.Empty;
-
-        foreach ( var elem in elems )
+        if( newSymbols.Count == 0)
         {
-            output += elem + ";";
-            Debug.Log( elem );
+            PlayerSettings.SetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android , string.Empty );
         }
+        else
+        {
+            string output = newSymbols [ 0 ];
 
-        PlayerSettings.SetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android , output);
-        defineSymbols = output;
+            for ( int i = 1; i < newSymbols.Count; i++ )
+            {
+                output += ";" + newSymbols [ i ];
+            }
+
+            PlayerSettings.SetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android , output );
+        }
     }
 }

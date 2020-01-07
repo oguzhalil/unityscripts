@@ -4,70 +4,73 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LText : Text
+namespace UtilityScripts
 {
-    public CaseStyle caseStyle = CaseStyle.Default;
-
-    public string id;
-
-    protected override void Start ()
+    public class LText : Text
     {
-        base.Start();
+        public CaseStyle caseStyle = CaseStyle.Default;
 
-        //Debug.Log(LocalizationManager.instance == null);
+        public string id;
 
-        if ( Localization.Instance != null )
+        protected override void Start ()
         {
-            string text = Localization.Instance.GetText(id);
+            base.Start();
 
-            OnLanguageUpdated( text );
+            //Debug.Log(LocalizationManager.instance == null);
 
-            Localization.Instance.Register( this );
-        }
-    }
-
-    protected override void OnDestroy ()
-    {
-        base.OnDestroy();
-
-        if ( Localization.Instance != null )
-            Localization.Instance.UnRegister( this );
-
-    }
-
-    public void OnLanguageUpdated ( string text )
-    {
-        if ( caseStyle != CaseStyle.Default && !string.IsNullOrEmpty(text))
-        {
-            switch ( caseStyle )
+            if ( Localization.Instance != null )
             {
-                case CaseStyle.UpperCase:
-                    text = text.ToUpperInvariant();
-                    break;
-                case CaseStyle.LowerCase:
-                    text = text.ToLowerInvariant();
-                    break;
-                case CaseStyle.PascalCase:
-                    if ( text.Length > 1 ) text = Char.ToUpperInvariant( text [ 0 ] ) + text.Substring( 1 );
-                    break;
-                case CaseStyle.CamelCase:
-                    if ( text.Length > 1 ) text = Char.ToLowerInvariant( text [ 0 ] ) + text.Substring( 1 );
-                    break;
-                default:
-                    break;
+                string text = Localization.Instance.GetText( id );
+
+                OnLanguageUpdated( text );
+
+                Localization.Instance.Register( this );
             }
         }
 
-        this.text = text;
-    }
+        protected override void OnDestroy ()
+        {
+            base.OnDestroy();
 
-    public enum CaseStyle
-    {
-        Default = 0,
-        UpperCase = 1, // UPPERCASE
-        LowerCase = 2, // lowercase
-        PascalCase = 3, // PascalCase
-        CamelCase = 4 // camelCase
-    }
+            if ( Localization.Instance != null )
+                Localization.Instance.UnRegister( this );
 
+        }
+
+        public void OnLanguageUpdated ( string text )
+        {
+            if ( caseStyle != CaseStyle.Default && !string.IsNullOrEmpty( text ) )
+            {
+                switch ( caseStyle )
+                {
+                    case CaseStyle.UpperCase:
+                        text = text.ToUpperInvariant();
+                        break;
+                    case CaseStyle.LowerCase:
+                        text = text.ToLowerInvariant();
+                        break;
+                    case CaseStyle.PascalCase:
+                        if ( text.Length > 1 ) text = Char.ToUpperInvariant( text [ 0 ] ) + text.Substring( 1 );
+                        break;
+                    case CaseStyle.CamelCase:
+                        if ( text.Length > 1 ) text = Char.ToLowerInvariant( text [ 0 ] ) + text.Substring( 1 );
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            this.text = text;
+        }
+
+        public enum CaseStyle
+        {
+            Default = 0,
+            UpperCase = 1, // UPPERCASE
+            LowerCase = 2, // lowercase
+            PascalCase = 3, // PascalCase
+            CamelCase = 4 // camelCase
+        }
+
+    }
 }

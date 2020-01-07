@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-
-[CustomEditor( typeof( LText ) )]
-public class LTextInspector : Editor
+namespace UtilityScripts
 {
-    public override void OnInspectorGUI ()
+    [CustomEditor( typeof( LText ) )]
+    public class LTextInspector : Editor
     {
-        DrawDefaultInspector();
+        public override void OnInspectorGUI ()
+        {
+            DrawDefaultInspector();
+        }
     }
 }

@@ -3,56 +3,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameSettings : Singleton<GameSettings>
+namespace UtilityScripts
 {
-    public enum VSync
+    public class GameSettings : UniqueSingleton<GameSettings>
     {
-        Off = 0,
-        OneBuffer = 1,
-        TwoBuffer = 2
-    }
-
-    public VSync m_vSync;
-    public int m_RefreshRate;
-    public float m_TargetFrameRate;
-    public bool m_ShowFPS;
-
-    protected override void Awake ()
-    {
-        base.Awake();
-        SetBuffer( m_vSync );
-    }
-
-    public void SetBuffer ( VSync vSync )
-    {
-        QualitySettings.vSyncCount = ( int ) m_vSync;
-        m_RefreshRate = Screen.currentResolution.refreshRate;
-
-        if ( m_vSync == VSync.Off )
+        public enum VSync
         {
-            m_TargetFrameRate = m_RefreshRate;
-        }
-        else
-        {
-            m_TargetFrameRate = m_RefreshRate / ( int ) m_vSync;
+            Off = 0,
+            OneBuffer = 1,
+            TwoBuffer = 2
         }
 
-        Application.targetFrameRate = ( int ) m_TargetFrameRate;
+        public VSync m_vSync;
+        public int m_RefreshRate;
+        public float m_TargetFrameRate;
+        public bool m_ShowFPS;
 
-        Debug.Log( $"Vsync is {m_vSync} target frameRate {m_TargetFrameRate} refresh rate {m_RefreshRate}" );
-    }
-
-    private void OnGUI ()
-    {
-        if ( m_ShowFPS )
+        protected override void Awake ()
         {
-            GUI.skin.box.fontSize = 35;
-            GUILayout.Label( string.Format( "FPS : {0:0.#}" , 1.0f / Time.deltaTime ) , GUI.skin.box );
+            base.Awake();
+            SetBuffer( m_vSync );
         }
-    }
 
-    public override bool DontDestroyWhenLoad ()
-    {
-        return true;
+        public void SetBuffer ( VSync vSync )
+        {
+            QualitySettings.vSyncCount = ( int ) m_vSync;
+            m_RefreshRate = Screen.currentResolution.refreshRate;
+
+            if ( m_vSync == VSync.Off )
+            {
+                m_TargetFrameRate = m_RefreshRate;
+            }
+            else
+            {
+                m_TargetFrameRate = m_RefreshRate / ( int ) m_vSync;
+            }
+
+            Application.targetFrameRate = ( int ) m_TargetFrameRate;
+
+            Debug.Log( $"Vsync is {m_vSync} target frameRate {m_TargetFrameRate} refresh rate {m_RefreshRate}" );
+        }
+
+        private void OnGUI ()
+        {
+            if ( m_ShowFPS )
+            {
+                GUI.skin.box.fontSize = 35;
+                GUILayout.Label( string.Format( "FPS : {0:0.#}" , 1.0f / Time.deltaTime ) , GUI.skin.box );
+            }
+        }
     }
 }

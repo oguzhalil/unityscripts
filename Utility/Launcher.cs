@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UtilityScripts;
 
 // Basic scene loader script with dot animation
 // Launcher tasks are the task should complete before launching.
