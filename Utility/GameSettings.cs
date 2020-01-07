@@ -1,7 +1,4 @@
-﻿using EboxGames;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UtilityScripts
 {
@@ -14,39 +11,39 @@ namespace UtilityScripts
             TwoBuffer = 2
         }
 
-        public VSync m_vSync;
-        public int m_RefreshRate;
-        public float m_TargetFrameRate;
-        public bool m_ShowFPS;
+        public VSync vsync;
+        public int refreshRate;
+        public float targetFrameRate;
+        public bool showFps;
 
         protected override void Awake ()
         {
             base.Awake();
-            SetBuffer( m_vSync );
+            SetBuffer( vsync );
         }
 
         public void SetBuffer ( VSync vSync )
         {
-            QualitySettings.vSyncCount = ( int ) m_vSync;
-            m_RefreshRate = Screen.currentResolution.refreshRate;
+            QualitySettings.vSyncCount = ( int ) vsync;
+            refreshRate = Screen.currentResolution.refreshRate;
 
-            if ( m_vSync == VSync.Off )
+            if ( vsync == VSync.Off )
             {
-                m_TargetFrameRate = m_RefreshRate;
+                targetFrameRate = 0;
             }
             else
             {
-                m_TargetFrameRate = m_RefreshRate / ( int ) m_vSync;
+                targetFrameRate = refreshRate / ( int ) vsync;
             }
 
-            Application.targetFrameRate = ( int ) m_TargetFrameRate;
+            Application.targetFrameRate = ( int ) targetFrameRate;
 
-            Debug.Log( $"Vsync is {m_vSync} target frameRate {m_TargetFrameRate} refresh rate {m_RefreshRate}" );
+            Debug.Log( $"Vsync is {vsync} target frameRate {targetFrameRate} refresh rate {refreshRate}" );
         }
 
         private void OnGUI ()
         {
-            if ( m_ShowFPS )
+            if ( showFps )
             {
                 GUI.skin.box.fontSize = 35;
                 GUILayout.Label( string.Format( "FPS : {0:0.#}" , 1.0f / Time.deltaTime ) , GUI.skin.box );
