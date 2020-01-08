@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "EboxGamesSettings")]
-public class EboxGamesSettings : ScriptableObject
+public class UtilitySettings : ScriptableObject
 {
     public bool googlePlayGameServices;
     public bool playfabServices;

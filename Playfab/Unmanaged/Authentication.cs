@@ -47,7 +47,7 @@ namespace EboxGames
                                 ( error ) =>
                                 {
                                     m_bIsError = true;
-                                    Logger.Error( error.GenerateErrorReport() );
+                                    Debug.LogError( error.GenerateErrorReport() );
                                 } );
 
                             }
@@ -71,7 +71,7 @@ namespace EboxGames
                     }
                     else
                     {
-                        Logger.Error( $"Store login parameters are wrong. param: {authParams.Info}" );
+                        Debug.LogError( $"Store login parameters are wrong. param: {authParams.Info}" );
                     }
                 }
                 else
@@ -100,7 +100,7 @@ namespace EboxGames
                         ( error ) =>
                         {
                             m_bIsError = true;
-                            Logger.Error( error.GenerateErrorReport() );
+                            Debug.LogError( error.GenerateErrorReport() );
                         } );
 
                     }

@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 public class EditorUtilities : MonoBehaviour
 {
-    private static int id;
 
     [MenuItem( "Tools/Commands/Reload Preloaded Assets" )]
     public static void UpdatePreloaded ()
@@ -25,6 +24,8 @@ public class EditorUtilities : MonoBehaviour
         PlayerPrefs.DeleteAll();
         Debug.Log( $"Command - ClearPrefs: All Preferences is deleted." );
     }
+
+    private static int id;
 
     [MenuItem( "Tools/Commands/Take Screen Shot" )]
     public static void TakeScreenShot ()

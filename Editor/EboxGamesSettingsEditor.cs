@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-[CustomEditor( typeof( EboxGamesSettings ) )]
-public class EboxGamesSettingsEditor : Editor
+[CustomEditor( typeof( UtilitySettings ) )]
+public class UtilitySettingsEditor : Editor
 {
     public SerializedProperty googlePlayGameServices;
     public SerializedProperty playfabServices;
@@ -13,13 +13,13 @@ public class EboxGamesSettingsEditor : Editor
     public SerializedProperty unityAdsServices;
     public SerializedProperty loggerEnabled;
 
-    private EboxGamesSettings settings;
+    private UtilitySettings settings;
     private string defineSymbols;
 
-    public const string symbolAdmob = "ADMOB";
-    public const string symbolUnityAds = "UNITY_ADS";
-    public const string symbolGPGS = "GPGS";
-    public const string symbolPlayfab = "PLAYFAB";
+    public const string symbolAdmob = "ENABLE_ADMOB";
+    public const string symbolUnityAds = "ENABLE_UNITYADS";
+    public const string symbolGPGS = "ENABLE_GPGS";
+    public const string symbolPlayfab = "ENABLE_PLAYFAB";
     public const string symbolLogger = "ENABLE_LOGS";
 
     public override void OnInspectorGUI ()
@@ -41,7 +41,7 @@ public class EboxGamesSettingsEditor : Editor
 
     private void OnEnable ()
     {
-        settings = target as EboxGamesSettings;
+        settings = target as UtilitySettings;
         //googlePlayGameServices = serializedObject.FindProperty( "googlePlayGameServices" );
         //playfabServices = serializedObject.FindProperty( "playfabServices" );
         //admobServices = serializedObject.FindProperty( "admobServices" );
@@ -50,7 +50,7 @@ public class EboxGamesSettingsEditor : Editor
         //defineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android );
     }
 
-    private void ChangeSymbol ( EboxGamesSettings settings ) // def CROSS_PLATFORM_INPUT;BCG_RCC
+    private void ChangeSymbol ( UtilitySettings settings ) // def CROSS_PLATFORM_INPUT;BCG_RCC
     {
         string symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android );
 

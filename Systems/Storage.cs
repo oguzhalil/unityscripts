@@ -8,7 +8,7 @@ namespace EboxGames
         {
             if(obj is string)
             {
-                Logger.Error( $"Store.Write() given object is string. It must be pure C# class. {obj}" );
+                Debug.LogError( $"Store.Write() given object is string. It must be pure C# class. {obj}" );
                 return false;
             }
 

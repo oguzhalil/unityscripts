@@ -1,249 +1,194 @@
-﻿//using GoogleMobileAds.Api;
-//using System;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using UnityEngine.SceneManagement;
-//using UnityEngine.Advertisements;
+﻿#if ENABLE_ADMOB
+using GoogleMobileAds.Api;
+using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
-//public class AdmobHandler : MonoBehaviour
-//{
-//    public static AdmobHandler Instance { get; private set; }
+namespace UtilityScripts
+{
+    public class AdmobHandler : UniqueSingleton<AdmobHandler>
+    {
+        [Header( "Admob Identications" )]
+        public string idsApp = "ca-app-pub-5545711692730045~6411072599";
+        public string idsBanner = "ca-app-pub-5545711692730045/2112734930";
+        public string idsInterstitial = "ca-app-pub-5545711692730045/3635190855";
+        public string idsRewarded = "ca-app-pub-5545711692730045/3252047477";
+        public string IOS_idsApp = "ca-app-pub-5545711692730045~6411072599";
+        public string IOS_idsBanner = "ca-app-pub-5545711692730045/2112734930";
+        public string IOS_idsInterstitial = "ca-app-pub-5545711692730045/3635190855";
+        public string IOS_idsRewarded = "ca-app-pub-5545711692730045/3252047477";
+        private const string idsTestBannerId = "ca-app-pub-3940256099942544/6300978111";
+        private const string idsTestInterstitial = "ca-app-pub-3940256099942544/1033173712";
+        private const string idsTestRewarded = "ca-app-pub-3940256099942544/5224354917";
+        public bool testMode;
+        public int interstitialCounter;
+        public int interstitialShowCount;
+        public const string keyPremium = "#premium";
+        public bool IsPremiumUser { private set; get; }
+        private InterstitialAd interstitialAd;
+        private BannerView bannerView;
+        private RewardedAd rewardedAd;
+        private Action<bool> onRewardedCallback;
 
-//    void Awake ()
-//    {
-//        if ( Instance != null )
-//            Destroy( gameObject );
-//        else
-//        {
-//            Instance = this;
-//            DontDestroyOnLoad( gameObject );
-//        }
-//    }
+        protected override void Awake ()
+        {
+            base.Awake();
+            MobileAds.Initialize( idsApp );
+            MobileAds.SetiOSAppPauseOnBackground( true );
 
-//    const string appId = "ca-app-pub-5545711692730045~6411072599"; // real app id
 
-//    string bannerId = "ca-app-pub-5545711692730045/2112734930";
-//    string interstitialId = "ca-app-pub-5545711692730045/3635190855";
-//    string rewardedVideoId = "ca-app-pub-5545711692730045/3252047477";
+#if UNITY_IOS || UNITY_EDITOR
+            idsApp = IOS_idsApp;
+            idsBanner = IOS_idsBanner;
+            idsInterstitial = IOS_idsInterstitial;
+            idsRewarded = IOS_idsRewarded;
+#endif
 
-//    string testBannerId = "ca-app-pub-3940256099942544/6300978111"; // test id
-//    string testInterstitialId = "ca-app-pub-3940256099942544/1033173712"; // test id
-//    string testRewardedVideoId = "ca-app-pub-3940256099942544/5224354917"; // test id
+            if ( testMode )
+            {
+                idsBanner = idsTestBannerId;
+                idsInterstitial = idsTestInterstitial;
+                idsRewarded = idsTestRewarded;
+            }
 
-//    private BannerView bannerView;
-//    private InterstitialAd interstitial;
+            IsPremiumUser = PlayerPrefs.HasKey( keyPremium );
 
-//    public bool test;
+            if ( !IsPremiumUser )
+            {
+                this.RequestBanner();
+                this.RequestInterstitialAd();
+                this.RequestRewardBasedVideo();
+            }
+        }
 
-//    public RewardBasedVideoAd rewardedVideo { get { return RewardBasedVideoAd.Instance; } }
+        public void ActivatePremium ()
+        {
+            IsPremiumUser = true;
 
-//    public string placementId = "rewardedVideo";
+            if ( bannerView != null )
+                bannerView.Destroy();
 
-//    public string unityGameId = "3178505";
-//    //private static int interstitialcounter;
+            if ( interstitialAd != null )
+                interstitialAd.Destroy();
+        }
 
-//    int count;
+        public void HideBanner ()
+        {
+            if ( bannerView != null )
+                bannerView.Hide();
+        }
 
-//    public const string premium = "premium";
+        public void ShowBanner ()
+        {
+            if ( bannerView != null )
+                bannerView.Show();
+        }
 
-//    bool premiumUser;
+        public void ShowInterstitial ()
+        {
+            if ( interstitialAd.IsLoaded() )
+            {
+                interstitialCounter++;
+                if ( interstitialCounter >= interstitialShowCount )
+                {
+                    interstitialCounter = 0;
+                    interstitialAd.Show();
+                }
+            }
+            else
+            {
+                interstitialCounter++;
+                RequestInterstitialAd();
+            }
+        }
 
-//    private void OnEnable ()
-//    {
-//        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-//    }
+        public bool ShowRewardBasedVideo (Action<bool> onRewardedCallback)
+        {
+            this.onRewardedCallback = onRewardedCallback;
+            if ( rewardedAd.IsLoaded() )
+            {
+                rewardedAd.Show();
+                return true;
+            }
+            else
+            {
+                RequestRewardBasedVideo();
+                return false;
+            }
+        }
 
-//    private void SceneManager_sceneLoaded ( Scene arg0 , LoadSceneMode arg1 )
-//    {
-//        if ( !PabloGames.Bridge.fullbanner )
-//            return;
+        private void RequestBanner ()
+        {
+            if ( bannerView != null )
+            {
+                bannerView.Destroy();
+            }
 
-//        StartCoroutine( this.AsyncTask( () =>
-//        {
-//            if ( bannerView == null )
-//                return;
+            bannerView = new BannerView( idsBanner , AdSize.Banner , AdPosition.Bottom );
+            AdRequest request = new AdRequest.Builder().Build();
+            bannerView.LoadAd( request );
+        }
 
-//            if ( arg0.buildIndex > 1 )
-//            {
-//                bannerView.SetPosition( AdPosition.Top );
-//                //bannerView.LoadAd( new AdRequest.Builder().Build() );
-//            }
-//            else
-//            {
-//                bannerView.SetPosition( AdPosition.Bottom );
-//                //bannerView.LoadAd( new AdRequest.Builder().Build() );
-//            }
+        public void RequestInterstitialAd ()
+        {
+            if ( interstitialAd != null )
+            {
+                interstitialAd.Destroy();
+            }
 
-//            //if ( arg0.buildIndex > 1 )
-//            //{
-//            //    bannerView.Destroy();
-//            //    RequestBanner( AdPosition.Top );
-//            //}
-//            //else
-//            //{
-//            //    bannerView.Destroy();
-//            //    RequestBanner( AdPosition.Bottom );
-//            //}
-//        } ) );
-//    }
+            interstitialAd = new InterstitialAd( idsInterstitial );
+            interstitialAd.OnAdClosed += OnInterstitialAdClosed;
 
-//    private void OnDisable ()
-//    {
-//        SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-//    }
+            AdRequest request = new AdRequest.Builder().Build();
+            interstitialAd.LoadAd( request );
+        }
 
-//    void Start ()
-//    {
-//        MobileAds.Initialize( appId );
+        public void RequestRewardBasedVideo ()
+        {
+            if ( rewardedAd != null )
+            {
+                rewardedAd = null;
+            }
 
-//        if ( test )
-//        {
-//            bannerId = testBannerId;
-//            interstitialId = testInterstitialId;
-//            rewardedVideoId = testRewardedVideoId;
-//        }
+            rewardedAd = new RewardedAd( idsRewarded );
+            rewardedAd.OnAdClosed += OnRewardedAdClosed;
+            rewardedAd.OnAdFailedToLoad += OnRewardedAdClosed;
+            rewardedAd.OnUserEarnedReward += OnRewardEarned;
 
-//        premiumUser = PlayerPrefs.HasKey( premium );
+            AdRequest request = new AdRequest.Builder().Build();
+            rewardedAd.LoadAd( request );
+        }
 
-//        //bannerView.Hide();
-//        //bannerView.Show();
-//        if ( !premiumUser )
-//        {
-//            this.RequestBanner();
-//            this.RequestInterstitialAd();
-//            this.RequestRewardBasedVideo();
-//        }
+        private void OnRewardEarned ( object sender , Reward e )
+        {
+            onRewardedCallback.SafeInvokeDelete( true );
+        }
 
-//        Advertisement.Initialize( unityGameId , test );
+        private void OnRewardedAdClosed ( object sender , EventArgs e )
+        {
+            onRewardedCallback.SafeInvokeDelete( false );
+            RequestRewardBasedVideo();
+        }
 
-//    }
+        private void OnInterstitialAdClosed ( object sender , EventArgs e )
+        {
+            RequestInterstitialAd();
+        }
 
-//    public void ActivatePremium ()
-//    {
-//        premiumUser = true;
-
-//        if ( bannerView != null )
-//            bannerView.Destroy();
-
-//        if ( interstitial != null )
-//            interstitial.Destroy();
-//    }
-
-//    IEnumerator Delay ( float time , Action action )
-//    {
-//        yield return new WaitForSeconds( time );
-//        action();
-//    }
-
-//    public void HideBanner ()
-//    {
-//        if ( bannerView != null && !PabloGames.Bridge.fullbanner )
-//            bannerView.Hide();
-//    }
-
-//    public void ShowBanner ()
-//    {
-//        if ( bannerView != null )
-//            bannerView.Show();
-//    }
-
-//    public void ShowInterstitial ( float? time = null )
-//    {
-//        if ( premiumUser )
-//            return;
-
-//        if ( time == null )
-//        {
-//            interstitial.Show();
-//            RequestInterstitialAd();
-//        }
-//        else
-//        {
-//            StartCoroutine( Delay( time.Value , () =>
-//            {
-//                interstitial.Show();
-//                RequestInterstitialAd();
-//            } ) );
-//        }
-//    }
-
-//    [ContextMenu( "UnityAds" )]
-//    public void TestUnityAds ()
-//    {
-//        ShowAdUnityAds();
-//    }
-
-//    public string placementIdInter = "Interstitial";
-
-//    public void ShowAdUnityAds ()
-//    {
-//        if ( premiumUser )
-//            return;
-
-//        StartCoroutine( ShowAdWhenReady() );
-//    }
-
-//    private IEnumerator ShowAdWhenReady ()
-//    {
-//        while ( !Advertisement.IsReady( placementIdInter ) )
-//        {
-//            yield return new WaitForSeconds( 0.25f );
-//        }
-
-//        Advertisement.Show( placementIdInter );
-
-//        //ad = Monetization.GetPlacementContent( placementId ) as ShowAdPlacementContent;
-
-//        //if ( ad != null )
-//        //{
-//        //    ad.Show();
-//        //}
-//    }
-
-//    public void ShowRewardBasedVideo ()
-//    {
-//        if ( this.rewardedVideo.IsLoaded() )
-//            this.rewardedVideo.Show();
-//    }
-
-//    #region Request
-
-//    private void RequestBanner ()
-//    {
-//        bannerView = new BannerView( bannerId , AdSize.Banner , AdPosition.Bottom );
-
-//        AdRequest request = new AdRequest.Builder().Build();
-
-//        bannerView.LoadAd( request );
-//    }
-
-//    public void RequestInterstitialAd ()
-//    {
-//        interstitial = new InterstitialAd( interstitialId );
-
-//        AdRequest request = new AdRequest.Builder().Build();
-
-//        interstitial.LoadAd( request );
-//    }
-
-//    public void RequestRewardBasedVideo ()
-//    {
-//        AdRequest request = new AdRequest.Builder().Build();
-
-//        this.rewardedVideo.LoadAd( request , rewardedVideoId );
-//    }
-
-//    #endregion Request
-
-//}
-
-//public static class HelperAd
-//{
-//    public static IEnumerator AsyncTask ( this MonoBehaviour monoBehaviour , Action action )
-//    {
-//        yield return null;
-//        action();
-//    }
-//}
-
+        // Returns an ad request with custom ad targeting.
+        private AdRequest CreateAdRequest ()
+        {
+            return new AdRequest.Builder()
+                .AddTestDevice( AdRequest.TestDeviceSimulator )
+                .AddTestDevice( "0123456789ABCDEF0123456789ABCDEF" )
+                .AddKeyword( "game" )
+                .SetGender( Gender.Male )
+                .SetBirthday( new DateTime( 1985 , 1 , 1 ) )
+                .TagForChildDirectedTreatment( false )
+                .AddExtra( "color_bg" , "9B30FF" )
+                .Build();
+        }
+    }
+}
+#endif
