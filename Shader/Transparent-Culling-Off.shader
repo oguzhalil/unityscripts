@@ -4,7 +4,7 @@
 // - no Main Color
 // - fully supports only 1 directional light. Other lights can affect it, but it will be per-vertex/SH.
 
-Shader "Mobile/Color-Culling-Off" {
+Shader "Mobile/Transparent-Color-Culling-Off" {
 Properties {
 		_Color("Color Tint", Color) = (1,1,1,1)
 		_Alpha("Alpha",Float) = 1.0

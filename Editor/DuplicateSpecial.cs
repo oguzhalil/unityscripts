@@ -35,6 +35,7 @@ public class DuplicateSpecial : EditorWindow
     {
         EditorWindow.GetWindow( typeof( DuplicateSpecial ) );
     }
+
     private Bounds bounds;
 
     void OnGUI ()

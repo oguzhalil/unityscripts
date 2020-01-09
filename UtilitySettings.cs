@@ -10,4 +10,5 @@ public class UtilitySettings : ScriptableObject
     public bool admobServices;
     public bool unityAdsServices;
     public bool loggerEnabled;
+    public bool inAppPurcases;
 }

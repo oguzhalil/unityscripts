@@ -7,12 +7,6 @@ using System;
 [CustomEditor( typeof( UtilitySettings ) )]
 public class UtilitySettingsEditor : Editor
 {
-    public SerializedProperty googlePlayGameServices;
-    public SerializedProperty playfabServices;
-    public SerializedProperty admobServices;
-    public SerializedProperty unityAdsServices;
-    public SerializedProperty loggerEnabled;
-
     private UtilitySettings settings;
     private string defineSymbols;
 
@@ -21,6 +15,8 @@ public class UtilitySettingsEditor : Editor
     public const string symbolGPGS = "ENABLE_GPGS";
     public const string symbolPlayfab = "ENABLE_PLAYFAB";
     public const string symbolLogger = "ENABLE_LOGS";
+    public const string symbolInApp = "ENABLE_INAPP";
+
 
     public override void OnInspectorGUI ()
     {
@@ -30,6 +26,8 @@ public class UtilitySettingsEditor : Editor
         settings.admobServices = EditorGUILayout.Toggle( "Admob Services" , settings.admobServices );
         settings.unityAdsServices = EditorGUILayout.Toggle( "Unity Ads Services" , settings.unityAdsServices );
         settings.loggerEnabled = EditorGUILayout.Toggle( "Logger Enabled" , settings.loggerEnabled );
+        settings.inAppPurcases = EditorGUILayout.Toggle( "In App Purcases Enabled" , settings.inAppPurcases );
+
 
         if ( EditorGUI.EndChangeCheck() )
         {
@@ -42,12 +40,6 @@ public class UtilitySettingsEditor : Editor
     private void OnEnable ()
     {
         settings = target as UtilitySettings;
-        //googlePlayGameServices = serializedObject.FindProperty( "googlePlayGameServices" );
-        //playfabServices = serializedObject.FindProperty( "playfabServices" );
-        //admobServices = serializedObject.FindProperty( "admobServices" );
-        //unityAdsServices = serializedObject.FindProperty( "unityAdsServices" );
-        //loggerEnabled = serializedObject.FindProperty( "loggerEnabled" );
-        //defineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android );
     }
 
     private void ChangeSymbol ( UtilitySettings settings ) // def CROSS_PLATFORM_INPUT;BCG_RCC
@@ -77,7 +69,10 @@ public class UtilitySettingsEditor : Editor
         {
             newSymbols.Add( symbolPlayfab );
         }
-
+        if(settings.inAppPurcases)
+        {
+            newSymbols.Add( symbolInApp );
+        }
 
         foreach ( var seperatedSymbol in seperatedSymbols )
         {
@@ -92,6 +87,8 @@ public class UtilitySettingsEditor : Editor
                 case symbolPlayfab:
                     break;
                 case symbolLogger:
+                    break;
+                case symbolInApp:
                     break;
                 default:
                     newSymbols.Add( seperatedSymbol );
