@@ -14,9 +14,7 @@ namespace UtilityScripts
     {
         public string mainId = "com.bundle.id";
         public GameProduct [] products;
-        [NonSerialized]
         public List<UnityEvent<Product>> onInitialized;
-        [NonSerialized]
         public List<UnityEvent<Product>> onBuyProduct;
 
         public void RegisterOnInitialized ( UnityEvent<Product> uEvent )

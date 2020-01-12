@@ -11,6 +11,18 @@ namespace UtilityScripts
 {
     public class EditorUtilities : MonoBehaviour
     {
+        [MenuItem( "GameObject/Copy Full Path" , false , 0 )]
+        public static void CopyFullPath ()
+        {
+            Transform transform = Selection.activeGameObject.transform;
+
+            //string path = "\"" + transform.root.name + "/" + AnimationUtility.CalculateTransformPath( transform , transform.root ) + "\"";
+
+            //Transform root = transform.GetComponentInParent<Page>(true).transform;
+            string path = "\"" + AnimationUtility.CalculateTransformPath( transform , transform.root ) + "\"";
+            EditorGUIUtility.systemCopyBuffer = path;
+            Debug.Log( $"Command - Copy Full Path: Full path {path} copied to the systemBuffer." );
+        }
 
         [MenuItem( "Tools/Commands/Reload Preloaded Assets" )]
         public static void UpdatePreloaded ()
@@ -60,11 +72,19 @@ namespace UtilityScripts
             string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath( path + "/NewJSON".ToString() + ".json" );
             string dataPath = Application.dataPath;
             dataPath = dataPath.Remove( dataPath.Length - "Assets".Length , "Assets".Length );
-            File.Create( dataPath + assetPathAndName );
+
+            if ( !File.Exists( dataPath + assetPathAndName ) )
+            {
+                using ( StreamWriter sw = File.CreateText( dataPath + assetPathAndName ) )
+                {
+                    sw.Write( "{\n}" );
+                }
+            }
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.FocusProjectWindow();
-            //AssetDatabase.CreateAsset( new TextAsset (), assetPathAndName );
+            Selection.activeObject = AssetDatabase.LoadAssetAtPath( assetPathAndName , typeof(Object) );
             Debug.Log( $"Command - Create JSON: Json created at {dataPath} with name {AssetDatabase.GetMainAssetTypeAtPath( assetPathAndName ).Name}." );
         }
 

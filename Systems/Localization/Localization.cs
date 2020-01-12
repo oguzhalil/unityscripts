@@ -11,13 +11,13 @@ namespace UtilityScripts
         public const string m_sKeyLang = "#language";
         private Dictionary<string , string> m_selectedLangPairs;
         public SystemLanguage m_selectSysLang;
-        Dictionary<LText , Action<string>> m_localizedTexts;
+        Dictionary<LocText , Action<string>> m_localizedTexts;
 
         protected override void Awake ()
         {
             base.Awake();
             int language = PlayerPrefs.GetInt( m_sKeyLang , ( int ) SystemLanguage.English );
-            m_localizedTexts = new Dictionary<LText , Action<string>>();
+            m_localizedTexts = new Dictionary<LocText , Action<string>>();
             UpdateLanguage( language );
         }
 
@@ -36,19 +36,19 @@ namespace UtilityScripts
             PlayerPrefs.SetInt( m_sKeyLang , systemLanguage );
         }
 
-        public void Register ( LText lText )
+        public void Register ( LocText locText )
         {
-            if ( !m_localizedTexts.ContainsKey( lText ) )
+            if ( !m_localizedTexts.ContainsKey( locText ) )
             {
-                m_localizedTexts.Add( lText , lText.OnLanguageUpdated );
+                m_localizedTexts.Add( locText , locText.OnLanguageUpdated );
             }
         }
 
-        public void UnRegister ( LText lText )
+        public void Unregister ( LocText locText )
         {
-            if ( m_localizedTexts.ContainsKey( lText ) )
+            if ( m_localizedTexts.ContainsKey( locText ) )
             {
-                m_localizedTexts.Remove( lText );
+                m_localizedTexts.Remove( locText );
             }
         }
 

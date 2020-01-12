@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace UtilityScripts
 {
-    public class LText : Text
+    public class LocText : Text
     {
         public CaseStyle caseStyle = CaseStyle.Default;
 
@@ -33,7 +33,7 @@ namespace UtilityScripts
             base.OnDestroy();
 
             if ( Localization.Instance != null )
-                Localization.Instance.UnRegister( this );
+                Localization.Instance.Unregister( this );
 
         }
 

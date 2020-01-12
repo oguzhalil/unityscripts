@@ -5,8 +5,8 @@ using UnityEditor;
 
 namespace UtilityScripts
 {
-    [CustomEditor( typeof( LText ) )]
-    public class LTextInspector : Editor
+    [CustomEditor( typeof( LocText ) )]
+    public class LocTextInspector : Editor
     {
         public override void OnInspectorGUI ()
         {

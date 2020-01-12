@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu( menuName = "Create Language" )]
+[CreateAssetMenu( menuName = "Custom/Localization/Language" )]
 public class Languages : ScriptableObject
 {
     public TextFile [] m_textFiles;

@@ -9,10 +9,8 @@ using UnityEngine.UI;
 
 namespace UtilityScripts
 {
-    public static class Util
+    public static class LocalizationUtility
     {
-        static int ss_id = 0;
-
         /// <summary>
         //	This makes it easy to create, name and place unique new ScriptableObject asset files.
         /// </summary>
@@ -46,57 +44,7 @@ namespace UtilityScripts
             CreateAsset<Languages>();
         }
 
-        [MenuItem( "Tools/CreateJSON" )]
-        public static void CreateJSON ()
-        {
-
-            ////var asset = "";
-
-
-            ////if ( path == "" )
-            ////{
-            ////    path = "Assets";
-            ////}
-            ////else if ( Path.GetExtension( path ) != "" )
-            ////{
-            ////    path = path.Replace( Path.GetFileName( AssetDatabase.GetAssetPath( Selection.activeObject ) ) , "" );
-            ////}
-
-            string path = AssetDatabase.GetAssetPath( Selection.activeObject );
-
-            string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath( path + "/JSON_01.json" ); // Assets/BasketballMaster/Scripts/Language/JSON_01.json
-
-            string finalPath = @Application.dataPath + assetPathAndName.Remove( 0 , "Assets".Length );
-
-            Debug.Log( finalPath );
-
-            Debug.Log( assetPathAndName );
-
-            Debug.Log( Application.dataPath );
-            //AssetDatabase.CreateAsset( asset , assetPathAndName );
-
-
-            if ( !File.Exists( finalPath ) )
-            {
-                // Create a file to write to.
-                using ( StreamWriter sw = File.CreateText( finalPath ) )
-                {
-                    sw.Write( "{\n}" );
-                }
-            }
-
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            EditorUtility.FocusProjectWindow();
-        }
-
-        [MenuItem( "Tools/Clear Preferences" )]
-        public static void ClearPrefs ()
-        {
-            PlayerPrefs.DeleteAll();
-        }
-
-        [MenuItem( "Tools/Replace LText" )]
+        [MenuItem( "Tools/Localization/Text to LocText" )]
         public static void ReplaceLText ()
         {
             GameObject go = Selection.activeGameObject;
@@ -116,7 +64,7 @@ namespace UtilityScripts
 
             UnityEngine.Object.DestroyImmediate( go.GetComponent<Text>() );
 
-            LText newText = go.AddComponent<LText>();
+            LocText newText = go.AddComponent<LocText>();
 
             // font
             newText.font = copy.font;
@@ -140,9 +88,10 @@ namespace UtilityScripts
             //text
             newText.text = copy.text;
 
+            Debug.Log( $"Localization : Default text { go.name } replaced by localized text." );
         }
 
-        [MenuItem( "Tools/Replace LTEXT -> TEXT" )]
+        [MenuItem( "Tools/Localization/LocText to Text" )]
         public static void ReplaceText ()
         {
             GameObject go = Selection.activeGameObject;
@@ -150,17 +99,17 @@ namespace UtilityScripts
             if ( go == null )
                 return;
 
-            LText t = go.GetComponent<LText>();
+            LocText t = go.GetComponent<LocText>();
 
 
             if ( t == null )
                 return;
 
-            LText copy = GetCopyOf( t , t );
+            LocText copy = GetCopyOf( t , t );
 
             Debug.Log( copy.font.name );
 
-            UnityEngine.Object.DestroyImmediate( go.GetComponent<LText>() );
+            UnityEngine.Object.DestroyImmediate( go.GetComponent<LocText>() );
 
             Text newText = go.AddComponent<Text>();
 
@@ -185,6 +134,8 @@ namespace UtilityScripts
 
             //text
             newText.text = copy.text;
+
+            Debug.Log( $"Localization : Localized text { go.name } replaced by default text" );
 
         }
 
@@ -211,20 +162,6 @@ namespace UtilityScripts
                 type = type.BaseType;
             }
             return Monobehaviour as T;
-        }
-
-        [MenuItem( "Tools/Reload Preloaded" )]
-        public static void UpdatePreloaded ()
-        {
-            var preloadedAssets = UnityEditor.PlayerSettings.GetPreloadedAssets();
-            UnityEditor.PlayerSettings.SetPreloadedAssets( preloadedAssets );
-        }
-
-        [MenuItem( "Tools/ScreenShot" )]
-        public static void TakeScreenShot ()
-        {
-            ScreenCapture.CaptureScreenshot( "ss_id" + ++ss_id + ".png" );
-
         }
     }
 }

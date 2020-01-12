@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UtilityScripts;
 
-public class PreviousPanel : MonoBehaviour
+public class PreviousPage : MonoBehaviour
 {
     private void Start ()
     {
         var button = GetComponent<Button>();
         //button.onClick.RemoveAllListeners();
 
-        button.onClick.AddListener( () => { UIBox.Instance.currentPage.PreviousPanel(); } );
+        button.onClick.AddListener( () => { UIManager.Instance.PreviousPage(); } );
     }
 }

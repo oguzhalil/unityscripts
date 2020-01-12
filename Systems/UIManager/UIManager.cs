@@ -1,27 +1,55 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace UtilityScripts
 {
-    public class UIBox : Singleton<UIBox>
+    public class UIManager : Singleton<UIManager>
     {
         public Page currentPage;
         private Stack<Page> previousPages = new Stack<Page>();
         public int bufferSize = 3;
-        public EnumMonoDictionary m_PairPages;
+        //public EnumMonoDictionary m_PairPages;
+
+        [EnumType( typeof( PageTypes ) )]
+        public EnumObject [] pages;
+
+        public Page GetPage ( PageTypes pageType )
+        {
+            for ( int i = 0; i < pages.Length; i++ )
+            {
+                EnumObject enumObject = pages [ i ];
+                if ( ( PageTypes ) enumObject.enumAsInt == pageType )
+                {
+                    return enumObject._object as Page;
+                }
+            }
+
+            return null;
+        }
 
         private void Start ()
         {
-            foreach ( var pair in m_PairPages )
+            for ( int i = 0; i < pages.Length; i++ )
             {
-                if ( pair.Value.gameObject.activeInHierarchy )
+                EnumObject enumObject = pages [ i ];
+
+                if ( ((GameObject)enumObject._object).activeInHierarchy  )
                 {
-                    currentPage = pair.Value.GetComponent<Page>();
+                    currentPage = ( ( GameObject ) enumObject._object ).GetComponent<Page>();
                     break;
                 }
-
             }
+
+            //foreach ( var pair in m_PairPages )
+            //{
+            //    if ( pair.Value.gameObject.activeInHierarchy )
+            //    {
+            //        currentPage = pair.Value.GetComponent<Page>();
+            //        break;
+            //    }
+            //}
         }
 
         public static UIElem GetExposure ( Page page , string elementId )
@@ -64,16 +92,16 @@ namespace UtilityScripts
 
         }
 
-        public void ChangePage ( Pages page )
+        public void ChangePage ( PageTypes pageType )
         {
-            if ( !m_PairPages.ContainsKey( page ) )
+            if ( GetPage(pageType) == null)
             {
-                Debug.LogError( GetType().Name + ".cs  method id : ChangePage() " + page );
+                Debug.LogError( GetType().Name + ".cs  method id : ChangePage() " + pageType );
                 return;
             }
 
             var previousPage = currentPage;
-            currentPage = m_PairPages [ page ] as Page;
+            currentPage = GetPage( pageType );
 
             if ( previousPage == currentPage )
                 return;
@@ -93,5 +121,5 @@ namespace UtilityScripts
         }
     }
 
-    public enum Pages { Homepage = 0, Company = 1, Spin = 2, Rank = 3, DailyGift = 4, Garage = 5, Map = 6, Store = 7, Settings = 8, Currency = 9 }
+    public enum PageTypes { Homepage = 0, Company = 1, Spin = 2, Rank = 3, DailyGift = 4, Garage = 5, Map = 6, Store = 7, Settings = 8, Currency = 9 }
 }
