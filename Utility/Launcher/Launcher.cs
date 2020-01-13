@@ -6,7 +6,7 @@ using UtilityScripts;
 
 // Basic scene loader script with dot animation
 // Launcher tasks are the task should complete before launching.
-namespace EboxGames
+namespace UtilityScript
 {
     public class Launcher : MonoBehaviour
     {

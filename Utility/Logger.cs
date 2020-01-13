@@ -5,7 +5,6 @@ using Debug = UnityEngine.Debug;
 
 public static class Logger
 {
-
     static Logger ()
     {
         Application.SetStackTraceLogType( LogType.Log , StackTraceLogType.None );

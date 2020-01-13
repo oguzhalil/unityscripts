@@ -238,40 +238,6 @@ public class ColorChanger : MonoBehaviour
             return UnityEditor.EditorApplication.isPlaying;
         }
     }
-
-    //public class PostProcessBuild
-    //{
-    //    const string m_fileName = "\version.txt";
-
-    //    [PostProcessBuild( 1 )]
-    //    public static void OnPostProcessBuild ( BuildTarget target , string pathToBuildProject )
-    //    {
-    //        string buildPath = pathToBuildProject + m_fileName;
-    //        string assetPath = Application.dataPath + m_fileName;
-
-    //        bool bExist = System.IO.File.Exists( assetPath );
-
-    //        if ( bExist )
-    //        {
-    //            // The using statement automatically flushes AND CLOSES the stream and calls 
-    //            using ( StreamWriter file = new StreamWriter( assetPath ) )
-    //            {
-    //                file.Write( IncrementVersion() );
-    //            }
-    //        }
-
-    //        Debug.Log( $"" );
-    //    }
-
-    //    static string IncrementVersion ()
-    //    {
-    //        string majorVersion = Application.version;
-    //        string buildVersion = PlayerSettings.bundleVersion;
-
-    //        return "";
-    //    }
-    //}
-
 #endif
 }
 

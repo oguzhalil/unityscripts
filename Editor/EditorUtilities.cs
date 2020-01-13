@@ -11,19 +11,6 @@ namespace UtilityScripts
 {
     public class EditorUtilities : MonoBehaviour
     {
-        [MenuItem( "GameObject/Copy Full Path" , false , 0 )]
-        public static void CopyFullPath ()
-        {
-            Transform transform = Selection.activeGameObject.transform;
-
-            //string path = "\"" + transform.root.name + "/" + AnimationUtility.CalculateTransformPath( transform , transform.root ) + "\"";
-
-            //Transform root = transform.GetComponentInParent<Page>(true).transform;
-            string path = "\"" + AnimationUtility.CalculateTransformPath( transform , transform.root ) + "\"";
-            EditorGUIUtility.systemCopyBuffer = path;
-            Debug.Log( $"Command - Copy Full Path: Full path {path} copied to the systemBuffer." );
-        }
-
         [MenuItem( "Tools/Commands/Reload Preloaded Assets" )]
         public static void UpdatePreloaded ()
         {
@@ -84,7 +71,7 @@ namespace UtilityScripts
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.FocusProjectWindow();
-            Selection.activeObject = AssetDatabase.LoadAssetAtPath( assetPathAndName , typeof(Object) );
+            Selection.activeObject = AssetDatabase.LoadAssetAtPath( assetPathAndName , typeof( Object ) );
             Debug.Log( $"Command - Create JSON: Json created at {dataPath} with name {AssetDatabase.GetMainAssetTypeAtPath( assetPathAndName ).Name}." );
         }
 
@@ -264,6 +251,27 @@ namespace UtilityScripts
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = asset;
         }
-    }
 
+        [MenuItem( "GameObject/Copy Full Path" , false , 0 )]
+        public static void CopyFullPath ()
+        {
+            Transform transform = Selection.activeGameObject.transform;
+
+            Transform parent = transform.parent;
+            string path = transform.name;
+            while( parent != null && !parent.GetComponent<Page>())
+            {
+                path = parent.name + "/" + path;
+                parent = parent.parent;
+            }
+
+            //string path = "\"" + transform.root.name + "/" + AnimationUtility.CalculateTransformPath( transform , transform.root ) + "\"";
+            //Transform root = transform.GetComponentInParent<Page>(true).transform;
+            //string path = "\"" + AnimationUtility.CalculateTransformPath( transform , transform.root ) + "\"";
+
+            EditorGUIUtility.systemCopyBuffer = "\"" + path + "\"";
+            Debug.Log( $"Command - Copy Full Path: Full path : {path} copied to the systemBuffer." );
+        }
+
+    }
 }

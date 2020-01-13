@@ -5,7 +5,7 @@ using System;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames;
 
-namespace EboxGames
+namespace UtilityScript
 {
     public class Authentication : LauncherTask
     {

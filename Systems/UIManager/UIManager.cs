@@ -22,7 +22,8 @@ namespace UtilityScripts
                 EnumObject enumObject = pages [ i ];
                 if ( ( PageTypes ) enumObject.enumAsInt == pageType )
                 {
-                    return enumObject._object as Page;
+                    Page page = (( GameObject ) enumObject._object).GetComponent<Page>();
+                    return page;
                 }
             }
 
@@ -35,6 +36,7 @@ namespace UtilityScripts
             {
                 EnumObject enumObject = pages [ i ];
 
+                print( enumObject._object.name );
                 if ( ((GameObject)enumObject._object).activeInHierarchy  )
                 {
                     currentPage = ( ( GameObject ) enumObject._object ).GetComponent<Page>();

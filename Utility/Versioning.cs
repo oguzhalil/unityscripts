@@ -13,23 +13,21 @@ using UnityEditor.Build.Reporting;
 
 public class Versioning : MonoBehaviour
 {
-    Text m_tx;
-
-    static TextAsset m_textAsset;
+    private Text txComp;
+    private static TextAsset textAsset;
 
     private void Start ()
     {
-        m_tx = GetComponent<Text>();
-        m_tx.text = "V" + Application.version;
+        txComp = GetComponent<Text>();
+        txComp.text = "V" + Application.version;
 
-        if ( m_textAsset == null )
+        if ( textAsset == null )
         {
-            m_textAsset = Resources.Load<TextAsset>( "version" );
+            textAsset = Resources.Load<TextAsset>( "version" );
         }
-
-        if ( m_textAsset )
+        if ( textAsset )
         {
-            m_tx.text = "V" + m_textAsset.text;
+            txComp.text = "V" + textAsset.text;
         }
     }
 
@@ -50,11 +48,11 @@ public class Versioning : MonoBehaviour
     {
         public int callbackOrder { get { return 0; } }
 
-        public const string m_fileName = "/Resources/version.txt";
+        public const string fileName = "/Resources/version.txt";
 
         public void OnPreprocessBuild ( BuildReport report )
         {
-            string assetPath = Application.dataPath + m_fileName;
+            string assetPath = Application.dataPath + fileName;
             bool bExist = System.IO.File.Exists( assetPath );
             string version = IncrementVersion();
 
@@ -89,7 +87,7 @@ public class Versioning : MonoBehaviour
         }
         public static void Test ()
         {
-            string assetPath = Application.dataPath + m_fileName;
+            string assetPath = Application.dataPath + fileName;
             Debug.Log( assetPath );
             bool bExist = System.IO.File.Exists( assetPath );
             string version = IncrementVersion();
@@ -111,10 +109,8 @@ public class Versioning : MonoBehaviour
             }
 
             PlayerSettings.bundleVersion = version;
-
             Debug.Log( $"" );
         }
-
 
         public static string IncrementVersion ()
         {
@@ -128,56 +124,11 @@ public class Versioning : MonoBehaviour
             int major = int.Parse( lines [ 0 ] );
             int minor = int.Parse( lines [ 1 ] );
             int build = int.Parse( lines [ 2 ] );
-            //int androidBundleCode = PlayerSettings.Android.bundleVersionCode;
-
             build++;
-            //androidBundleCode++;
-
             return $"{major}.{minor}.{build}";//.{androidBundleCode}";
 
-            //for ( int i = 0; i < lines.Length; i++ )
-            //{
-            //    string str = lines [ i ];
-            //    version += new string( '.' , (int)Mathf.Clamp01( i ) ) + str;
-            //}
-            //Debug.Log( version );
-            //return version;
         }
     }
-
-    //public class PostProcessBuild
-    //{
-    //    const string m_fileName = "\version.txt";
-
-    //    [PostProcessBuild( 1 )]
-    //    public static void OnPostProcessBuild ( BuildTarget target , string pathToBuildProject )
-    //    {
-    //        string buildPath = pathToBuildProject + m_fileName;
-    //        string assetPath = Application.dataPath + m_fileName;
-
-    //        bool bExist = System.IO.File.Exists( assetPath );
-
-    //        if ( bExist )
-    //        {
-    //            // The using statement automatically flushes AND CLOSES the stream and calls 
-    //            using ( StreamWriter file = new StreamWriter( assetPath ) )
-    //            {
-    //                file.Write( IncrementVersion() );
-    //            }
-    //        }
-
-    //        Debug.Log( $"" );
-    //    }
-
-    //    static string IncrementVersion ()
-    //    {
-    //        string majorVersion = Application.version;
-    //        string buildVersion = PlayerSettings.bundleVersion;
-
-    //        return "";
-    //    }
-    //}
-
 #endif
 
 }
