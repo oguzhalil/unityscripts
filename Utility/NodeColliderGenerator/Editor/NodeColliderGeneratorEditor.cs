@@ -15,7 +15,7 @@ public class NodeColliderGeneratorEditor : Editor
     }
 
 
-    [MenuItem("Tools/Collider Generator/Add Collider %g")]
+    [MenuItem("Tools/Collider Generator/Add Collider %e")]
     public static void GenerateShortcut()
     {
         if( nodeColliderGenerator != null )

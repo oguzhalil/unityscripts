@@ -54,20 +54,20 @@ namespace UtilityScripts
             //}
         }
 
-        public static UIElem GetExposure ( Page page , string elementId )
-        {
-            foreach ( var panel in page.panels )
-            {
-                foreach ( var exposedElement in panel.elems )
-                {
-                    if ( exposedElement.id == elementId )
-                        return exposedElement;
-                }
-            }
+        //public static UIElem GetExposure ( Page page , string elementId )
+        //{
+        //    foreach ( var panel in page.panels )
+        //    {
+        //        foreach ( var exposedElement in panel.elems )
+        //        {
+        //            if ( exposedElement.id == elementId )
+        //                return exposedElement;
+        //        }
+        //    }
 
-            return null;
+        //    return null;
 
-        }
+        //}
 
         public void PreviousPage ()
         {

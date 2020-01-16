@@ -6,11 +6,7 @@ using System.Linq;
 
 public class Page : MonoBehaviour
 {
-    [SerializeField] private Sprite sprBackground;
-    private Canvas canvas;
     public Panel [] panels;
-    public static Image prefabImgBackground;
-    public Image imgBackground;
     private Stack<Panel> previousPanels;
     private Panel currentPanel;
     public Panel panelDefault;
@@ -19,10 +15,7 @@ public class Page : MonoBehaviour
 
     void Awake ()
     {
-        //if ( prefabImgBackground == null )
-        //    prefabImgBackground = Resources.Load<Image>( "background" );
-
-        Constructor();
+        Init();
         animation = GetComponent<Animation>();
 
         if ( animation )
@@ -41,35 +34,12 @@ public class Page : MonoBehaviour
             ChangePanel( panelDefault );
     }
 
-    void Constructor ()
+    void Init ()
     {
         if ( panels != null && panels.Length > 0 )
             currentPanel = panels [ 0 ];
 
         previousPanels = new Stack<Panel>();
-
-        if ( prefabImgBackground == null || sprBackground == null )
-            return;
-
-        imgBackground = Instantiate( prefabImgBackground , transform );
-        imgBackground.transform.SetAsFirstSibling();
-        imgBackground.sprite = sprBackground;
-        imgBackground.gameObject.SetActive( true );
-
-    }
-
-    public UIElem GetExposure ( string elementId )
-    {
-        foreach ( var panel in panels )
-        {
-            foreach ( var exposedElement in panel.elems )
-            {
-                if ( exposedElement.id == elementId )
-                    return exposedElement;
-            }
-        }
-
-        return null;
     }
 
     public Panel GetPanel ( string id )
@@ -126,6 +96,6 @@ public class Page : MonoBehaviour
 
     void OnAnimationEvent ()
     {
-        //AudioPlayer.Instance.PlaySFX( "appear" );
+
     }
 }

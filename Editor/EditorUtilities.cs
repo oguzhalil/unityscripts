@@ -55,11 +55,9 @@ namespace UtilityScripts
             {
                 path = path.Replace( Path.GetFileName( AssetDatabase.GetAssetPath( Selection.activeObject ) ) , "" );
             }
-
             string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath( path + "/NewJSON".ToString() + ".json" );
             string dataPath = Application.dataPath;
             dataPath = dataPath.Remove( dataPath.Length - "Assets".Length , "Assets".Length );
-
             if ( !File.Exists( dataPath + assetPathAndName ) )
             {
                 using ( StreamWriter sw = File.CreateText( dataPath + assetPathAndName ) )
@@ -67,7 +65,6 @@ namespace UtilityScripts
                     sw.Write( "{\n}" );
                 }
             }
-
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.FocusProjectWindow();
@@ -88,7 +85,6 @@ namespace UtilityScripts
         public static void DisableRaycasters ()
         {
             GameObject go = Selection.activeGameObject;
-
             if ( go == null )
                 return;
             int count = 0;
@@ -96,7 +92,6 @@ namespace UtilityScripts
             foreach ( Transform child in go.transform )
             {
                 var components = child.GetComponentsInChildren<Graphic>( true );
-
                 foreach ( var component in components )
                 {
                     component.raycastTarget = false;
@@ -143,7 +138,7 @@ namespace UtilityScripts
                     count++;
                 }
             }
-
+            Selection.activeGameObject = go[0];
             Debug.Log( $"Command - Unparent: {count} gameobjects unparented." );
         }
 
@@ -166,7 +161,7 @@ namespace UtilityScripts
         //    }
         //}
 
-        [MenuItem( "Tools/Commands/Centered Parent of Selections" )]
+        [MenuItem( "Tools/Commands/Centered Parent of Selections %g" )]
         public static void MakeParentForSelectedObjects ()
         {
             if ( Selection.gameObjects.Length == 0 )
@@ -184,11 +179,9 @@ namespace UtilityScripts
                else
                {
                    Bounds bounds = new Bounds();
-
                    foreach ( var go in Selection.gameObjects )
                    {
                        MeshRenderer [] renderers = go.GetComponentsInChildren<MeshRenderer>();
-
                        foreach ( var renderer in renderers )
                        {
                            if ( bounds.size == Vector3.zero )
@@ -201,17 +194,14 @@ namespace UtilityScripts
                            }
                        }
                    }
-
                    GameObject parent = new GameObject( input );
                    parent.transform.position = bounds.center;
-
                    foreach ( var go in Selection.gameObjects )
                    {
                        go.transform.SetParent( parent.transform );
                    }
 
                    Selection.activeGameObject = parent;
-
                    Debug.Log( $"Command - Make Parent: parented and centered." );
                }
 
@@ -231,7 +221,6 @@ namespace UtilityScripts
         public static void Create<T> () where T : ScriptableObject
         {
             T asset = ScriptableObject.CreateInstance<T>();
-
             string path = AssetDatabase.GetAssetPath( Selection.activeObject );
             if ( path == "" )
             {
@@ -245,7 +234,6 @@ namespace UtilityScripts
             string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath( path + "/New " + typeof( T ).ToString() + ".asset" );
 
             AssetDatabase.CreateAsset( asset , assetPathAndName );
-
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.FocusProjectWindow();
@@ -256,7 +244,6 @@ namespace UtilityScripts
         public static void CopyFullPath ()
         {
             Transform transform = Selection.activeGameObject.transform;
-
             Transform parent = transform.parent;
             string path = transform.name;
             while( parent != null && !parent.GetComponent<Page>())

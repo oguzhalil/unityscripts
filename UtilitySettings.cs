@@ -11,4 +11,5 @@ public class UtilitySettings : ScriptableObject
     public bool unityAdsServices;
     public bool loggerEnabled;
     public bool inAppPurcases;
+    public bool leanTween;
 }

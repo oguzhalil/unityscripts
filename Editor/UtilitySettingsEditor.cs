@@ -16,6 +16,7 @@ public class UtilitySettingsEditor : Editor
     public const string symbolPlayfab = "ENABLE_PLAYFAB";
     public const string symbolLogger = "ENABLE_LOGS";
     public const string symbolInApp = "ENABLE_INAPP";
+    public const string symbolLeanTween = "ENABLE_LEANTWEEN";
 
 
     public override void OnInspectorGUI ()
@@ -27,6 +28,8 @@ public class UtilitySettingsEditor : Editor
         settings.unityAdsServices = EditorGUILayout.Toggle( "Unity Ads Services" , settings.unityAdsServices );
         settings.loggerEnabled = EditorGUILayout.Toggle( "Logger Enabled" , settings.loggerEnabled );
         settings.inAppPurcases = EditorGUILayout.Toggle( "In App Purcases Enabled" , settings.inAppPurcases );
+        settings.leanTween = EditorGUILayout.Toggle( "Lean Tween Imported" , settings.leanTween );
+
 
 
         if ( EditorGUI.EndChangeCheck() )
@@ -65,13 +68,17 @@ public class UtilitySettingsEditor : Editor
         {
             newSymbols.Add( symbolLogger );
         }
-        if(settings.playfabServices)
+        if ( settings.playfabServices )
         {
             newSymbols.Add( symbolPlayfab );
         }
-        if(settings.inAppPurcases)
+        if ( settings.inAppPurcases )
         {
             newSymbols.Add( symbolInApp );
+        }
+        if ( settings.leanTween )
+        {
+            newSymbols.Add( symbolLeanTween );
         }
 
         foreach ( var seperatedSymbol in seperatedSymbols )
@@ -90,13 +97,15 @@ public class UtilitySettingsEditor : Editor
                     break;
                 case symbolInApp:
                     break;
+                case symbolLeanTween:
+                    break;
                 default:
                     newSymbols.Add( seperatedSymbol );
                     break;
             }
         }
 
-        if( newSymbols.Count == 0)
+        if ( newSymbols.Count == 0 )
         {
             PlayerSettings.SetScriptingDefineSymbolsForGroup( BuildTargetGroup.Android , string.Empty );
         }

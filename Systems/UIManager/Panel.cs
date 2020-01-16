@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class Panel : MonoBehaviour
 {
-    public UIElem [] elems;
-
     public string id;
-
     [NonSerialized] public Canvas canvas;
 
     private void Awake ()

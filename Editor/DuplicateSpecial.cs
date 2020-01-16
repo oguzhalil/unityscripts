@@ -43,7 +43,8 @@ public class DuplicateSpecial : EditorWindow
     [MenuItem( "Tools/Windows/Duplicate Special" )]
     public static void ShowWindow ()
     {
-        EditorWindow.GetWindow( typeof( DuplicateSpecial ) );
+        DuplicateSpecial d = EditorWindow.GetWindow( typeof( DuplicateSpecial ) ) as DuplicateSpecial;
+        d.instantiatedObjects = new List<GameObject>();
     }
 
     private Bounds bounds;
@@ -64,6 +65,10 @@ public class DuplicateSpecial : EditorWindow
         if ( randomizeSpacing )
         {
             radius = EditorGUILayout.FloatField( "Radius" , radius );
+        }
+        else
+        {
+            radius = 0;
         }
 
         if ( EditorGUI.EndChangeCheck() )
@@ -108,8 +113,8 @@ public class DuplicateSpecial : EditorWindow
 
                         if ( randomizeSpacing )
                         {
-                            position += vDir * radius;
-                            Vector2 rndCircle = UnityEngine.Random.insideUnitCircle * radius;
+                            position = selection.position + vDir * i * radius;
+                            Vector2 rndCircle = UnityEngine.Random.insideUnitCircle * radius * .5f;
                             position += new Vector3( rndCircle.x , 0f , rndCircle.y );
                         }
 
@@ -153,7 +158,7 @@ public class DuplicateSpecial : EditorWindow
             }
         }
 
-        if(GUILayout.Button("Undo"))
+        if ( GUILayout.Button( "Undo" ) )
         {
             instantiatedObjects.ForEach( x => UnityEngine.Object.DestroyImmediate( x ) );
         }
@@ -182,6 +187,11 @@ public class DuplicateSpecial : EditorWindow
         // Add (or re-add) the delegate.
         SceneView.duringSceneGui -= this.OnSceneGUI;
         SceneView.duringSceneGui += this.OnSceneGUI;
+
+        if( instantiatedObjects == null )
+        {
+            instantiatedObjects = new List<GameObject>();
+        }
     }
 
     void OnDestroy ()
@@ -206,7 +216,7 @@ public class DuplicateSpecial : EditorWindow
                 {
                     bounds.Encapsulate( renderer.bounds );
                 }
-                Handles.CircleHandleCap( 0 , Selection.activeGameObject.transform.position , Quaternion.AngleAxis(-90f,Vector3.right) , radius , EventType.Repaint );
+                Handles.CircleHandleCap( 0 , Selection.activeGameObject.transform.position , Quaternion.AngleAxis( -90f , Vector3.right ) , radius , EventType.Repaint );
                 Vector3 pos = bounds.center + Vector3.up * 3.0f;
                 Handles.ArrowHandleCap( 0 , pos , Quaternion.FromToRotation( Vector3.forward , vector ) , 3.0f , EventType.Repaint );
                 //Handles.ArrowHandleCap( 0 , Selection.activeGameObject.transform.position , Quaternion.LookRotation( -Vector3.right , Vector3.up ) , 1f , EventType.Repaint );
