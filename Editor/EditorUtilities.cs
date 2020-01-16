@@ -208,12 +208,14 @@ namespace UtilityScripts
            } );
         }
 
+#if ENABLE_INAPP
+
         [MenuItem( "Assets/Create/Custom/InAppPurchaseSettings" )]
         public static void CreateInAppPurchaseSettings ()
         {
             Create<InAppPurchaseSettings>();
         }
-
+#endif
 
         /// <summary>
         //	This makes it easy to create, name and place unique new ScriptableObject asset files.

@@ -1,4 +1,6 @@
-﻿using GoogleMobileAds.Api;
+﻿
+#if ENABLE_ADMOB
+using GoogleMobileAds.Api;
 using System;
 using UnityEngine;
 
@@ -153,3 +155,4 @@ namespace UtilityScripts
 
     }
 }
+#endif

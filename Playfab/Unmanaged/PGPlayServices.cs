@@ -1,4 +1,6 @@
-﻿using GooglePlayGames;
+﻿#if ENABLE_GPGS
+
+using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using System;
 using System.Collections;
@@ -82,3 +84,4 @@ namespace PabloGames
         }
     }
 }
+#endif

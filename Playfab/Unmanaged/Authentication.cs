@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if ENABLE_PLAYFAB
+
+using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
 using System;
@@ -275,3 +277,4 @@ namespace UtilityScript
 
    
 }
+#endif

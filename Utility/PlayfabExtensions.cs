@@ -1,4 +1,6 @@
-﻿using PlayFab.ClientModels;
+﻿#if ENABLE_PLAYFAB
+
+using PlayFab.ClientModels;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -108,3 +110,5 @@ public static class PlayfabExtension
         return result;
     }
 }
+
+#endif
