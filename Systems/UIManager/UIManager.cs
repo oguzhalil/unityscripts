@@ -7,7 +7,7 @@ namespace UtilityScripts
 {
     public class UIManager : Singleton<UIManager>
     {
-        public Page currentPage;
+        public Page curreentPage;
         private Stack<Page> previousPages = new Stack<Page>();
         public int bufferSize = 3;
         //public EnumMonoDictionary m_PairPages;
