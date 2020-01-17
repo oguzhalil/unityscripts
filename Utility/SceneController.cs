@@ -54,5 +54,9 @@ namespace UtilityScripts
             loading.SetActive( false );
             LeanTween.alpha( fade.rectTransform , 0f , 1.0f ).setOnComplete( () => { fade.gameObject.SetActive( false ); } );
         }
+        public static bool Is ( string sceneName )
+        {
+            return SceneManager.GetActiveScene().name == sceneName;
+        }
     }
 }
