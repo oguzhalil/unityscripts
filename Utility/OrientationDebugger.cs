@@ -7,7 +7,7 @@ using UnityEditor;
 public class OrientationDebugger : MonoBehaviour
 {
     public Mesh arrow;
-    private float size = 0.1f;
+    public float size = 0.1f;
 
     private void Start ()
     {
