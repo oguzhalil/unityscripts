@@ -8,7 +8,7 @@ public class TestLauncherTask : LauncherTask
 
     private void Start ()
     {
-        Invoke( "PrintHelloWorld" , 2.0f );
+        //Invoke( "PrintHelloWorld" , 2.0f );
     }
 
     private void PrintHelloWorld()

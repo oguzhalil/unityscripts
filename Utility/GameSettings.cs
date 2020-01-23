@@ -20,6 +20,18 @@ namespace UtilityScripts
         {
             base.Awake();
             SetBuffer( vsync );
+
+            if ( SystemInfo.graphicsDeviceVersion.Contains( "2.0" ) )
+            {
+                QualitySettings.SetQualityLevel( 0 , true );
+                
+                Debug.Log( $"Graphic Device is { SystemInfo.graphicsDeviceVersion } setting quality level to {QualitySettings.names [ 0 ]} " );
+            }
+            else
+            {
+                QualitySettings.SetQualityLevel( 2 , true );
+                Debug.Log( $"Graphic Device is { SystemInfo.graphicsDeviceVersion } setting quality level to {QualitySettings.names [ 2 ]} " );
+            }
         }
 
         public void SetBuffer ( VSync vSync )
