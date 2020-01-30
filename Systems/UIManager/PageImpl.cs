@@ -22,5 +22,18 @@ namespace UtilityScripts
         }
 
         public abstract void VOnRestore (); // Restore page to default values
+        protected virtual void Awake()
+        {
+            MonoBehaviourStateEvents stateEvents = page.GetComponent<MonoBehaviourStateEvents>();
+
+            if (stateEvents)
+            {
+                stateEvents.uEventOnEnable.AddListener( VOnRestore );
+            }
+            else
+            {
+                Debug.LogError( $"State event is null on Object { page.name }" );
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -33,19 +34,28 @@ public class ColorChanger : MonoBehaviour
         easeInBounce, easeOutBounce, easeInOutBounce, easeInBack, easeOutBack, easeInOutBack, easeInElastic, easeOutElastic, easeInOutElastic, easeSpring, easeShake
     };
     public enum Type { INSTANT, TIME, TWEEN, IMAGE }
-
+    private bool bInitialized;
 
     private void Start ()
+    {
+        if ( !bInitialized )
+        {
+            Initialize();
+        }
+    }
+
+    private void Initialize ()
     {
         m_graphic = GetComponent<Graphic>();
         m_defaultColor = m_graphic.color;
 
-        if(m_type == Type.IMAGE)
+        if ( m_type == Type.IMAGE )
         {
             m_image = GetComponent<Image>();
         }
 
         LeanTween.init();
+        bInitialized = true;
     }
 
     [ContextMenu( "Run" )]
@@ -98,6 +108,11 @@ public class ColorChanger : MonoBehaviour
 
     public void ToTarget ()
     {
+        if ( !bInitialized )
+        {
+            Initialize();
+        }
+
         switch ( m_type )
         {
             case Type.INSTANT:
@@ -121,6 +136,11 @@ public class ColorChanger : MonoBehaviour
 
     public void ToDefault ()
     {
+        if ( !bInitialized )
+        {
+            Initialize();
+        }
+
         switch ( m_type )
         {
             case Type.INSTANT:

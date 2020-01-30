@@ -10,7 +10,14 @@ public class MonoBehaviourStateEvents : MonoBehaviour
 
     private void OnEnable ()
     {
+        if(DevelopmentScript.m_bActive)
+        {
+            DevelopmentScript.queuedOperations.Enqueue( uEventOnEnable );
+        }
+        else
+        {
             uEventOnEnable.SafeInvoke();
+        }
     }
 
     private void OnDisable ()
