@@ -11,7 +11,7 @@ public class OrientationDebugger : MonoBehaviour
 
     private void Start ()
     {
-        Logger.Info( "Abc" );
+        //Logger.Info( "Abc" );
     }
 
     private void OnDrawGizmos ()

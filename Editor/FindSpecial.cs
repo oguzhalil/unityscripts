@@ -7,10 +7,16 @@ using Object = UnityEngine.Object;
 
 public class FindSpecial : EditorWindow
 {
-    enum SnapTo
+    enum Search
     {
-        BoundingBox = 0,
-        BoundingSphere = 1
+        ByRadius = 0,
+        ByHeight = 1,
+        ByWidth = 2,
+        ByName = 3,
+        ByOutsideOfBound = 4,
+        CenterParent = 5,
+        DeactiveObjects = 6,
+        HiddenObjects = 7
     }
 
     enum Space
@@ -29,7 +35,8 @@ public class FindSpecial : EditorWindow
         PositiveZ = 3,
     }
 
-    private SnapTo around = SnapTo.BoundingBox;
+    //private SnapTo around = SnapTo.BoundingBox;
+    private Search search = Search.ByRadius;
     private Space space = Space.Global;
     private Direction dir = Direction.NegativeX;
     private int count;
@@ -38,7 +45,12 @@ public class FindSpecial : EditorWindow
     private bool randomizeScale;
     private bool randomizeSpacing;
     private float radius;
+    private bool root = false;
     private List<GameObject> instantiatedObjects;
+    private bool findEmptyObjects;
+    private Bounds boundingBox;
+    private BoxCollider boundingBoxObj;
+    private bool IsGreater = false;
 
     [MenuItem( "Tools/Windows/Find Special" )]
     public static void ShowWindow ()
@@ -57,6 +69,21 @@ public class FindSpecial : EditorWindow
 
         //EditorGUI.BeginChangeCheck();
         radius = EditorGUILayout.FloatField( "Radius" , radius );
+        root = EditorGUILayout.Toggle( "Transform Root" , root );
+        findEmptyObjects = EditorGUILayout.Toggle( "Find Empty Objects" , findEmptyObjects );
+        search = ( Search ) EditorGUILayout.EnumPopup( "Search" , search );
+
+        if ( search == Search.ByOutsideOfBound )
+        {
+            boundingBoxObj = EditorGUILayout.ObjectField( boundingBoxObj , typeof( BoxCollider ) , true ) as BoxCollider;
+            if(boundingBoxObj)
+            boundingBox = boundingBoxObj.bounds;
+        }
+
+        if(search == Search.ByRadius)
+        {
+            IsGreater = EditorGUILayout.Toggle( "Is Greater" , IsGreater );
+        }
         //space = ( Space ) EditorGUILayout.EnumPopup( "Space" , space );
         //dir = ( Direction ) EditorGUILayout.EnumPopup( "Direction" , dir );
         //useEpsilon = EditorGUILayout.Toggle( "Use Epsilon" , useEpsilon );
@@ -82,99 +109,253 @@ public class FindSpecial : EditorWindow
 
         if ( GUILayout.Button( "Find" ) )
         {
-            if ( Selection.activeGameObject )
+            switch ( search )
             {
-                Transform root = Selection.activeGameObject.transform;
-                MeshRenderer [] meshRenderers = root.GetComponentsInChildren<MeshRenderer>();
-                List<Object> objects = new List<Object>( meshRenderers.Length ); 
+                case Search.ByRadius:
 
-                foreach ( var meshRenderer in meshRenderers )
-                {
-                    if ( meshRenderer.bounds.size.magnitude <= radius * 2 )
+                    //var renderes = ExtensionMethods.GetAllObjectsOnlyInSceneByType<MeshRenderer>();
+                    List<Object> selections = new List<Object>();
+                    if(Selection.gameObjects.Length > 0)
                     {
-                        objects.Add( meshRenderer.gameObject );
-                    }
-                }
+                        List<MeshRenderer> renderers = new List<MeshRenderer>( 10000 );
 
-                Selection.objects = objects.ToArray();
-
-                //Selection.set
-
-
-                instantiatedObjects.Clear();
-                Transform selection = Selection.activeGameObject.transform;
-                referenceObject = selection.gameObject;
-
-                if ( space == Space.Global )
-                {
-
-                    int index = Mathf.Abs( ( int ) dir );
-
-                    Vector3 vDir = indexToDirection( index );
-                    bounds = new Bounds( selection.position , Vector3.zero );
-                    MeshRenderer [] renderers = selection.GetComponentsInChildren<MeshRenderer>();
-                    foreach ( var renderer in renderers )
-                    {
-                        bounds.Encapsulate( renderer.bounds );
-                    }
-                    float f = bounds.extents [ Mathf.Abs( ( int ) dir ) - 1 ] * 2;
-
-                    if ( useEpsilon )
-                    {
-                        f -= Mathf.Epsilon;
-                    }
-
-                    for ( int i = 1; i <= count; i++ )
-                    {
-                        Vector3 position = selection.position + vDir * f * i;
-                        Quaternion rotation = selection.rotation;
-                        Vector3 scale = selection.localScale;
-
-                        if ( randomizeSpacing )
+                        foreach ( var obj in Selection.gameObjects )
                         {
-                            position = selection.position + vDir * i * radius;
-                            Vector2 rndCircle = UnityEngine.Random.insideUnitCircle * radius * .5f;
-                            position += new Vector3( rndCircle.x , 0f , rndCircle.y );
+                            var f = obj.GetComponentsInChildren<MeshRenderer>( true );
+
+                            foreach ( var item in f )
+                            {
+                                renderers.Add( item );
+                            }
                         }
 
-                        if ( randomizeYRotation )
+
+                        foreach ( var renderer in renderers )
                         {
-                            rotation = Quaternion.AngleAxis( UnityEngine.Random.value * 360f , Vector3.up ) * Quaternion.AngleAxis( UnityEngine.Random.value * 10f , Vector3.right ) * Quaternion.AngleAxis( UnityEngine.Random.value * 10f , Vector3.forward );
-                        }
-                        if ( randomizeScale )
-                        {
-                            scale = new Vector3( UnityEngine.Random.Range( 1f , 1.5f ) , UnityEngine.Random.Range( 1f , 1.5f ) , UnityEngine.Random.Range( 1f , 1.5f ) );
+                            if(IsGreater && renderer.bounds.size.magnitude >= radius * 2 )
+                            {
+                                selections.Add( renderer.gameObject );
+                            }
+                            else if (!IsGreater && renderer.bounds.size.magnitude <= radius * 2)
+                            {
+                                selections.Add( renderer.gameObject );
+                            }
                         }
 
-                        if ( PrefabUtility.IsPartOfAnyPrefab( selection.gameObject ) )
-                        {
-                            GameObject go = ( GameObject ) PrefabUtility.InstantiatePrefab( AssetDatabase.LoadAssetAtPath(
-                               PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot( Selection.activeObject ) , typeof( GameObject ) ) , selection.parent );
-                            go.transform.position = position;
-                            go.transform.rotation = rotation;
-                            go.transform.localScale = scale;
-                            instantiatedObjects.Add( go );
-                        }
+                        if(!IsGreater)
+                        Debug.Log( $"FindSpecial : Found { selections.Count } object smaller than {radius * 2} diameter" );
                         else
+                            Debug.Log( $"FindSpecial : Found { selections.Count } object greater than {radius * 2} diameter" );
+
+                        Selection.objects = selections.ToArray();
+                    }
+                    
+                    break;
+                case Search.ByHeight:
+                    break;
+                case Search.ByWidth:
+                    break;
+                case Search.ByName:
+
+                    break;
+                case Search.HiddenObjects:
+
+                    var objects = ExtensionMethods.GetAllObjectsOnlyInScene();
+
+                    List<GameObject> sele = new List<GameObject>();
+
+                    foreach ( var obj in objects )
+                    {
+                        if(obj.hideFlags == HideFlags.HideInHierarchy)
                         {
-                            GameObject go = Instantiate( selection.gameObject , position , rotation );
-                            go.transform.SetParent( selection.parent , true );
-                            go.transform.localScale = scale;
-                            instantiatedObjects.Add( go );
+                            Debug.Log( obj.name );
+                            sele.Add( obj );
+                        }
+                    }
+
+                    Selection.objects = sele.ToArray();
+
+                    break;
+                case Search.ByOutsideOfBound:
+
+                    List<GameObject> gameObjects = ExtensionMethods.GetAllObjectsOnlyInScene();
+                    List<GameObject> outofBounds = new List<GameObject>( gameObjects.Count );
+                    foreach ( var obj in gameObjects )
+                    {
+                        //MeshRenderer m = obj.GetComponent<MeshRenderer>();
+                        //if(m && !boundingBox.Contains( m.bounds.center))
+                        if( !boundingBox.Contains( obj.transform.position ) )
+                        {
+                            outofBounds.Add( obj.gameObject );
+                        }
+                    }
+
+                    Selection.objects = outofBounds.ToArray();
+                    return;
+                    break;
+                case Search.CenterParent:
+                    if ( Selection.objects.Length > 0 )
+                    {
+                        foreach ( Object r in Selection.objects )
+                        {
+                            Transform root = ( ( GameObject ) r ).transform;
+                            if ( root.GetComponent<MeshRenderer>() && root.parent != null )
+                            {
+                                Vector3 position = root.position;
+                                root.parent.SetPositionAndRotation( root.GetComponent<MeshRenderer>().bounds.center , root.parent.transform.rotation );
+                                root.SetPositionAndRotation( position , root.rotation );
+                                Debug.Log( "Centered" );
+                            }
                         }
 
+                        return;
                     }
-                }
-                else if ( space == Space.Local )
-                {
-
-                }
-
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                Debug.LogError( "DuplicateSpecial : Selected object is null." );
-            }
+
+            //if ( Selection.objects.Length > 0 )
+            //{
+            //    foreach ( Object r in Selection.objects )
+            //    {
+            //        Transform root = ( ( GameObject ) r ).transform;
+            //        if ( root.GetComponent<MeshRenderer>() && root.parent != null )
+            //        {
+            //            Vector3 position = root.position;
+            //            root.parent.SetPositionAndRotation( root.GetComponent<MeshRenderer>().bounds.center , root.parent.transform.rotation );
+            //            root.SetPositionAndRotation( position , root.rotation );
+            //            Debug.Log( "Centered" );
+            //        }
+            //    }
+
+            //    return;
+            //}
+
+            //if ( Selection.activeGameObject )
+            //{
+            //    Transform root = Selection.activeGameObject.transform;
+            //    List<Object> objects = new List<Object>( 100 );
+
+            //    if ( root.GetComponent<MeshRenderer>() )
+            //    {
+            //        Vector3 position = root.position;
+            //        root.parent.SetPositionAndRotation( root.GetComponent<MeshRenderer>().bounds.center , root.parent.transform.rotation );
+            //        root.SetPositionAndRotation( position , root.rotation );
+            //        Debug.Log( "Centered" );
+            //    }
+
+            //    //foreach ( Transform child in root )
+            //    //{
+            //    //    if ( child.childCount == 1 && child.GetChild( 0 ).GetComponent<MeshRenderer>() )
+            //    //    {
+            //    //        Vector3 localPos = child.GetChild( 0 ).transform.localPosition;
+            //    //        child.SetPositionAndRotation( child.GetChild( 0 ).GetComponent<MeshRenderer>().bounds.center , child.transform.rotation );
+            //    //        child.GetChild( 0 ).transform.localPosition = localPos;
+            //    //        Debug.Log( "Centered" );
+            //    //        //= child.GetChild( 0 ).GetComponent<MeshRenderer>().bounds.center;
+            //    //    }
+            //    //    //if ( child.childCount == 0 || child.GetComponentsInChildren<MeshRenderer>().Length == 0 )
+            //    //    //{
+            //    //    //    objects.Add( child.gameObject );
+            //    //    //}
+            //    //}
+
+            //    return;
+
+            //    if ( findEmptyObjects )
+            //    {
+            //        foreach ( Transform child in root )
+            //        {
+            //            if ( child.childCount == 0 || child.GetComponentsInChildren<MeshRenderer>().Length == 0 )
+            //            {
+
+            //                objects.Add( child.gameObject );
+            //            }
+            //        }
+
+            //        Selection.objects = objects.ToArray();
+            //    }
+
+               
+
+            //    //Selection.set
+
+
+            //    //instantiatedObjects.Clear();
+            //    //Transform selection = Selection.activeGameObject.transform;
+            //    //referenceObject = selection.gameObject;
+
+            //    //if ( space == Space.Global )
+            //    //{
+
+            //    //    int index = Mathf.Abs( ( int ) dir );
+
+            //    //    Vector3 vDir = indexToDirection( index );
+            //    //    bounds = new Bounds( selection.position , Vector3.zero );
+            //    //    MeshRenderer [] renderers = selection.GetComponentsInChildren<MeshRenderer>();
+            //    //    foreach ( var renderer in renderers )
+            //    //    {
+            //    //        bounds.Encapsulate( renderer.bounds );
+            //    //    }
+            //    //    float f = bounds.extents [ Mathf.Abs( ( int ) dir ) - 1 ] * 2;
+
+            //    //    if ( useEpsilon )
+            //    //    {
+            //    //        f -= Mathf.Epsilon;
+            //    //    }
+
+            //    //    for ( int i = 1; i <= count; i++ )
+            //    //    {
+            //    //        Vector3 position = selection.position + vDir * f * i;
+            //    //        Quaternion rotation = selection.rotation;
+            //    //        Vector3 scale = selection.localScale;
+
+            //    //        if ( randomizeSpacing )
+            //    //        {
+            //    //            position = selection.position + vDir * i * radius;
+            //    //            Vector2 rndCircle = UnityEngine.Random.insideUnitCircle * radius * .5f;
+            //    //            position += new Vector3( rndCircle.x , 0f , rndCircle.y );
+            //    //        }
+
+            //    //        if ( randomizeYRotation )
+            //    //        {
+            //    //            rotation = Quaternion.AngleAxis( UnityEngine.Random.value * 360f , Vector3.up ) * Quaternion.AngleAxis( UnityEngine.Random.value * 10f , Vector3.right ) * Quaternion.AngleAxis( UnityEngine.Random.value * 10f , Vector3.forward );
+            //    //        }
+            //    //        if ( randomizeScale )
+            //    //        {
+            //    //            scale = new Vector3( UnityEngine.Random.Range( 1f , 1.5f ) , UnityEngine.Random.Range( 1f , 1.5f ) , UnityEngine.Random.Range( 1f , 1.5f ) );
+            //    //        }
+
+            //    //        if ( PrefabUtility.IsPartOfAnyPrefab( selection.gameObject ) )
+            //    //        {
+            //    //            GameObject go = ( GameObject ) PrefabUtility.InstantiatePrefab( AssetDatabase.LoadAssetAtPath(
+            //    //               PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot( Selection.activeObject ) , typeof( GameObject ) ) , selection.parent );
+            //    //            go.transform.position = position;
+            //    //            go.transform.rotation = rotation;
+            //    //            go.transform.localScale = scale;
+            //    //            instantiatedObjects.Add( go );
+            //    //        }
+            //    //        else
+            //    //        {
+            //    //            GameObject go = Instantiate( selection.gameObject , position , rotation );
+            //    //            go.transform.SetParent( selection.parent , true );
+            //    //            go.transform.localScale = scale;
+            //    //            instantiatedObjects.Add( go );
+            //    //        }
+
+            //    //    }
+            //    //}
+            //    //else if ( space == Space.Local )
+            //    //{
+
+            //    //}
+
+            //}
+            //else
+            //{
+            //    Debug.LogError( "DuplicateSpecial : Selected object is null." );
+            //}
         }
 
         if ( GUILayout.Button( "Undo" ) )

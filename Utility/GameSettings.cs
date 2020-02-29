@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace UtilityScripts
 {
@@ -24,7 +27,7 @@ namespace UtilityScripts
             if ( SystemInfo.graphicsDeviceVersion.Contains( "2.0" ) )
             {
                 QualitySettings.SetQualityLevel( 0 , true );
-                
+
                 Debug.Log( $"Graphic Device is { SystemInfo.graphicsDeviceVersion } setting quality level to {QualitySettings.names [ 0 ]} " );
             }
             else
@@ -32,6 +35,9 @@ namespace UtilityScripts
                 QualitySettings.SetQualityLevel( 2 , true );
                 Debug.Log( $"Graphic Device is { SystemInfo.graphicsDeviceVersion } setting quality level to {QualitySettings.names [ 2 ]} " );
             }
+
+            //ListenForGCModeChange();
+            //DisableGC();
         }
 
         public void SetBuffer ( VSync vSync )
@@ -60,6 +66,32 @@ namespace UtilityScripts
                 GUI.skin.box.fontSize = 35;
                 GUILayout.Label( string.Format( "FPS : {0:0.#}" , 1.0f / Time.deltaTime ) , GUI.skin.box );
             }
+        }
+
+        static void ListenForGCModeChange ()
+        {
+            // Listen on garbage collector mode changes.
+            GarbageCollector.GCModeChanged += ( GarbageCollector.Mode mode ) =>
+            {
+                Debug.Log( "GCModeChanged: " + mode );
+            };
+        }
+
+        static void LogMode ()
+        {
+            Debug.Log( "GCMode: " + GarbageCollector.GCMode );
+        }
+
+        static void EnableGC ()
+        {
+            GarbageCollector.GCMode = GarbageCollector.Mode.Enabled;
+            // Trigger a collection to free memory.
+            GC.Collect();
+        }
+
+        static void DisableGC ()
+        {
+            GarbageCollector.GCMode = GarbageCollector.Mode.Disabled;
         }
     }
 }

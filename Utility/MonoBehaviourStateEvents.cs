@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UtilityScripts;
 
 public class MonoBehaviourStateEvents : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class MonoBehaviourStateEvents : MonoBehaviour
 
     private void OnEnable ()
     {
-        if(DevelopmentScript.m_bActive)
+        if(DevelopmentScript.m_bActive && SceneController.Is("Menu"))
         {
             DevelopmentScript.queuedOperations.Enqueue( uEventOnEnable );
         }

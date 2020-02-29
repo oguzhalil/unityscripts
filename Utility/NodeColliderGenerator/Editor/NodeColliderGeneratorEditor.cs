@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-[CustomEditor( typeof( NodeColliderGenerator ) )]
+[CanEditMultipleObjects]
+[CustomEditor( typeof( NodeColliderGenerator  )  )]
 public class NodeColliderGeneratorEditor : Editor
 {
     static NodeColliderGenerator nodeColliderGenerator;
@@ -47,14 +48,26 @@ public class NodeColliderGeneratorEditor : Editor
 
             }
         }
+
+        if ( GUILayout.Button( "ReArrange" ) )
+        {
+                nodeColliderGenerator.ReArrange();
+        }
         EditorGUILayout.EndHorizontal();
 
+            EditorGUILayout.PropertyField( serializedObject.FindProperty( "width" ) );
+            EditorGUILayout.PropertyField( serializedObject.FindProperty( "height" ) );
         EditorGUILayout.PropertyField( serialization );
+
+        if(targets.Length == 1)
+        {
+
 
         for ( int i = 0; i < serialization.arraySize; i++ )
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField( i.ToString()  , GUILayout.Width(25));
+
             EditorGUILayout.PropertyField( serialization.GetArrayElementAtIndex( i ) , GUIContent.none);
 
             if (GUILayout.Button("Add Before"))
@@ -75,8 +88,9 @@ public class NodeColliderGeneratorEditor : Editor
             EditorGUILayout.EndHorizontal();
         }
 
-        //EditorGUILayout.PropertyField( serializedObject.FindProperty( "serialization" ) , true );
-        
+            //EditorGUILayout.PropertyField( serializedObject.FindProperty( "serialization" ) , true );
+
+        }
 
 
         serializedObject.ApplyModifiedProperties();

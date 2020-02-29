@@ -54,7 +54,7 @@ public static class ExtensionMethods
 
     public static T RandomElement<T> ( this List<T> list )
     {
-        int index = Random.Range( 0 , list.Count);
+        int index = Random.Range( 0 , list.Count );
         return list [ index ];
     }
 
@@ -130,14 +130,14 @@ public static class ExtensionMethods
         }
     }
 
-    public static void SafeInvokeDelete ( this Action action )
-    {
-        if ( action != null )
-        {
-            action.Invoke();
-        }
-        action = null;
-    }
+    //public static void SafeInvokeDelete ( this Action action )
+    //{
+    //    if ( action != null )
+    //    {
+    //        action.Invoke();
+    //    }
+    //    action = null;
+    //}
 
     public static void SafeInvokeDelete<T> ( this Action<T> action , T value )
     {
@@ -146,5 +146,48 @@ public static class ExtensionMethods
             action.Invoke( value );
         }
         action = null;
+    }
+
+    public static List<GameObject> GetAllObjectsOnlyInScene ()
+    {
+        List<GameObject> objectsInScene = new List<GameObject>( 1000 );
+
+        foreach ( GameObject go in Resources.FindObjectsOfTypeAll( typeof( GameObject ) ) as GameObject [] )
+        {
+#if UNITY_EDITOR
+            if ( !UnityEditor.EditorUtility.IsPersistent( go.transform.root.gameObject ) && !( go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave ) )
+#else
+                if ( !( go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave ) )
+#endif
+                objectsInScene.Add( go );
+        }
+
+        return objectsInScene;
+    }
+
+    public static List<T> GetAllObjectsOnlyInSceneByType<T> () where T : Component
+    {
+        List<T> objectsInScene = new List<T>( 1000 );
+
+        foreach ( T go in Resources.FindObjectsOfTypeAll( typeof( T ) ) as T [] )
+        {
+#if UNITY_EDITOR
+            if ( !UnityEditor.EditorUtility.IsPersistent( go.transform.root.gameObject ) && !( go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave ) )
+#else
+                if ( !( go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave ) )
+#endif
+                objectsInScene.Add( go );
+        }
+
+        return objectsInScene;
+    }
+
+    public static void OpenURLStore ()
+    {
+#if UNITY_ANDROID
+        Application.OpenURL( $"market://details?id={Application.identifier}" );
+#elif UNITY_IPHONE
+        Application.OpenURL($"itms-apps://itunes.apple.com/app/id{Application.identifier}");
+#endif
     }
 }

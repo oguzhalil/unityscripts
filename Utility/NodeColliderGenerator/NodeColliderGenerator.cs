@@ -16,7 +16,7 @@ public class NodeColliderGenerator : MonoBehaviour
         LinkedList<Transform> linkedList = new LinkedList<Transform>( serialization );
 
         GameObject gameObject = ( GameObject ) PrefabUtility.InstantiatePrefab
-            ( AssetDatabase.LoadAssetAtPath( "Assets/TruckSim/Scripts/NodeColliderGenerator/Node.prefab" , typeof( GameObject ) ) );
+            ( AssetDatabase.LoadAssetAtPath( "Assets/UnityScripts/Utility/NodeColliderGenerator/Node.prefab" , typeof( GameObject ) ) );
 
         gameObject.transform.SetParent( transform );
         gameObject.name = "Node " + linkedList.Count;
@@ -52,6 +52,25 @@ public class NodeColliderGenerator : MonoBehaviour
         serialization = new Transform [ 0 ];
     }
 
+    public void ReArrange ()
+    {
+#if UNITY_EDITOR
+        LinkedList<Transform> linkedList = new LinkedList<Transform>();
+
+        foreach ( var item in serialization )
+        {
+            if ( item != null )
+            {
+                linkedList.AddLast( item );
+            }
+        }
+
+        serialization = new Transform [ linkedList.Count ];
+        linkedList.CopyTo( serialization , 0 );
+
+#endif
+    }
+
     public void Generate ()
     {
         LinkedList<Transform> linkedList = new LinkedList<Transform>( serialization );
@@ -85,7 +104,7 @@ public class NodeColliderGenerator : MonoBehaviour
             // iterator
             node = node.Next;
 
-            
+
         }
 
     }
@@ -107,7 +126,7 @@ public class NodeColliderGenerator : MonoBehaviour
         LinkedList<Transform> linkedList = new LinkedList<Transform>( serialization );
         LinkedListNode<Transform> node = linkedList.Find( serialization [ index ] );
         GameObject gameObject = ( GameObject ) PrefabUtility.InstantiatePrefab
-           ( AssetDatabase.LoadAssetAtPath( "Assets/TruckSim/Scripts/NodeColliderGenerator/Node.prefab" , typeof( GameObject ) ) );
+           ( AssetDatabase.LoadAssetAtPath( "Assets/UnityScripts/Utility/NodeColliderGenerator/Node.prefab" , typeof( GameObject ) ) );
         gameObject.transform.Translate( node.Value.transform.position , Space.World );
         gameObject.transform.SetParent( transform );
         gameObject.name = "Node " + linkedList.Count;
@@ -124,7 +143,7 @@ public class NodeColliderGenerator : MonoBehaviour
         LinkedList<Transform> linkedList = new LinkedList<Transform>( serialization );
         LinkedListNode<Transform> node = linkedList.Find( serialization [ index ] );
         GameObject gameObject = ( GameObject ) PrefabUtility.InstantiatePrefab
-           ( AssetDatabase.LoadAssetAtPath( "Assets/TruckSim/Scripts/NodeColliderGenerator/Node.prefab" , typeof( GameObject ) ) );
+           ( AssetDatabase.LoadAssetAtPath( "Assets/UnityScripts/Utility/NodeColliderGenerator/Node.prefab" , typeof( GameObject ) ) );
         gameObject.transform.Translate( node.Value.transform.position , Space.World );
         gameObject.transform.SetParent( transform );
         gameObject.name = "Node " + linkedList.Count;
@@ -132,5 +151,16 @@ public class NodeColliderGenerator : MonoBehaviour
         serialization = new Transform [ linkedList.Count ];
         linkedList.CopyTo( serialization , 0 );
 #endif
+    }
+
+    private void OnDrawGizmos ()
+    {
+        foreach ( var node in serialization )
+        {
+            if ( node )
+            {
+                Gizmos.DrawSphere( node.transform.position , width );
+            }
+        }
     }
 }

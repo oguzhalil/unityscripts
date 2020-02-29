@@ -12,11 +12,11 @@ namespace UtilityScript
     {
         public string m_SceneName;
         public bool m_DevelopmentMode;
-        public bool m_AllowSceneActivation = true;
+        //public bool m_AllowSceneActivation = true;
         public AsyncOperation m_AsyncSceneLoader;
         public LauncherTask [] m_LauncherTasks;
         public Text m_LabelLoading;
-        public Slider.SliderEvent m_LoadingProgress;
+        //public Slider.SliderEvent m_LoadingProgress;
         public bool m_DotAnimation;
         private int m_Dots = 0;
         public int m_MaxDots = 4;
@@ -33,17 +33,17 @@ namespace UtilityScript
             yield return new WaitUntil( () => IsLauncherTaskComplete() );
             //m_AsyncSceneLoader.allowSceneActivation = m_AllowSceneActivation;
 
-            SceneController.Instance.LoadSceneFadeOut( 0 );
+            SceneController.Instance.LoadSceneFadeOut( m_SceneName );
         }
 
         private void Update ()
         {
-            if ( m_AsyncSceneLoader != null )
-            {
-                float progress = ( ( ( float ) ( m_NumCompletedTasks + 1 ) / ( float ) ( m_LauncherTasks.Length + 1 ) )
-                    + ( m_AsyncSceneLoader.progress / 0.9f ) ) / 2.0f;
-                m_LoadingProgress.Invoke( progress );
-            }
+            //if ( m_AsyncSceneLoader != null )
+            //{
+            //    float progress = ( ( ( float ) ( m_NumCompletedTasks + 1 ) / ( float ) ( m_LauncherTasks.Length + 1 ) )
+            //        + ( m_AsyncSceneLoader.progress / 0.9f ) ) / 2.0f;
+            //    m_LoadingProgress.Invoke( progress );
+            //}
 
             if ( m_DotAnimation && Time.time > m_DotTimer )
             {
@@ -61,6 +61,11 @@ namespace UtilityScript
 
         public bool IsLauncherTaskComplete ()
         {
+            if(m_LauncherTasks == null || m_LauncherTasks.Length == 0)
+            {
+                return true;
+            }
+
             m_NumCompletedTasks = 0;
 
             for ( int i = 0; i < m_LauncherTasks.Length; i++ )

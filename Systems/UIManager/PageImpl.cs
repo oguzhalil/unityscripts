@@ -6,7 +6,7 @@ namespace UtilityScripts
 {
     public abstract class PageImpl : MonoBehaviour
     {
-        private Page pageRef;
+        public Page pageRef;
         public PageTypes pageType;
         public Page page
         {

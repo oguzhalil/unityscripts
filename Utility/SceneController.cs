@@ -13,6 +13,29 @@ namespace UtilityScripts
         public GameObject loading;
         public Image imgBar;
         private float progress;
+
+        [System.Serializable]
+        public class Scenes
+        {
+            public int id;
+            public string name;
+        }
+
+        public Scenes [] scenes;
+
+        public void LoadSceneFadeOut ( string levelName )
+        {
+            foreach ( var item in scenes )
+            {
+                if ( levelName == item.name )
+                {
+
+                    LoadSceneFadeOut( item.id );
+                    break;
+                }
+            }
+        }
+
         public void LoadSceneFadeOut ( int levelIndex )
         {
             fade.color = Color.black;
@@ -45,7 +68,7 @@ namespace UtilityScripts
             // Wait until the asynchronous scene fully loads
             while ( !asyncLoad.isDone )
             {
-                Debug.Log( asyncLoad.progress );
+                //Debug.Log( asyncLoad.progress );
                 progress = asyncLoad.progress / 0.9f;
                 yield return null;
             }

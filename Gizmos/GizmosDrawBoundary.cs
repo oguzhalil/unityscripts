@@ -9,6 +9,7 @@ public class GizmosDrawBoundary : MonoBehaviour
     public bool bWireframe = true;
     public bool bTransformMatrix = true;
     public bool bEncapsulateBounds = false;
+    public bool active;
     public Type type;
 
     public enum Type
@@ -19,6 +20,9 @@ public class GizmosDrawBoundary : MonoBehaviour
 
     private void OnDrawGizmos ()
     {
+        if ( !active )
+            return;
+
         if ( bTransformMatrix )
         {
             Gizmos.matrix = Matrix4x4.TRS( transform.position , transform.rotation , transform.localScale );

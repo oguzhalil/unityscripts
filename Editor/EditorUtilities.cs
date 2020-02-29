@@ -103,7 +103,7 @@ namespace UtilityScripts
         }
 
         [MenuItem( "Tools/Commands/Disable All Shadow Cast" )]
-        public static void TransformIntoPickup ()
+        public static void DisableAllShadowCast ()
         {
             var go = Selection.gameObjects;
             int count = 0;
@@ -112,9 +112,34 @@ namespace UtilityScripts
                 if ( item != null )
                 {
                     var renderer = item.GetComponent<MeshRenderer>();
-                    renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    if ( renderer )
+                        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                     count++;
-                    foreach ( var r in renderer.GetComponentsInChildren<MeshRenderer>() )
+                    foreach ( var r in item.GetComponentsInChildren<MeshRenderer>() )
+                    {
+                        r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                        count++;
+                    }
+                }
+            }
+
+            Debug.Log( $"Command - Disable ShadowCasts: {count} shadows cast disabled." );
+        }
+
+        [MenuItem( "Tools/Commands/Disable All Receive Shadow" )]
+        public static void DisableAllReceiveShadow ()
+        {
+            var go = Selection.gameObjects;
+            int count = 0;
+            foreach ( var item in go )
+            {
+                if ( item != null )
+                {
+                    var renderer = item.GetComponent<MeshRenderer>();
+                    if ( renderer )
+                        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    count++;
+                    foreach ( var r in item.GetComponentsInChildren<MeshRenderer>() )
                     {
                         r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                         count++;
@@ -138,30 +163,30 @@ namespace UtilityScripts
                     count++;
                 }
             }
-            Selection.activeGameObject = go[0];
+            Selection.activeGameObject = go [ 0 ];
             Debug.Log( $"Command - Unparent: {count} gameobjects unparented." );
         }
 
-        //[MenuItem( "Tools/Commands/Parent Object With Center Pivot" )]
-        //public static void ParentObjectWithCenterPivot ()
-        //{
-        //    foreach ( var go in Selection.gameObjects )
-        //    {
-        //        if ( go.GetComponent<MeshRenderer>() )
-        //        {
-        //            MeshRenderer mr = go.GetComponent<MeshRenderer>();
-        //            Vector3 position = mr.bounds.center;
-        //            GameObject parent = new GameObject( $"CentPrnt {go.name}" );
-        //            parent.transform.SetParent( go.transform.parent );
-        //            parent.transform.position = position;
-        //            go.transform.SetParent( parent.transform );
-        //            Undo.RecordObject( parent , "parent" );
-        //            Undo.RecordObject( go , "go" );
-        //        }
-        //    }
-        //}
+        [MenuItem( "Tools/Commands/Parent Object With Center Pivot (Self-Parent)" )]
+        public static void ParentObjectWithCenterPivot ()
+        {
+            foreach ( var go in Selection.gameObjects )
+            {
+                if ( go.GetComponent<MeshRenderer>() )
+                {
+                    MeshRenderer mr = go.GetComponent<MeshRenderer>();
+                    Vector3 position = mr.bounds.center;
+                    GameObject parent = new GameObject( $"CentPrnt {go.name}" );
+                    parent.transform.SetParent( go.transform.parent );
+                    parent.transform.position = position;
+                    go.transform.SetParent( parent.transform );
+                    Undo.RecordObject( parent , "parent" );
+                    Undo.RecordObject( go , "go" );
+                }
+            }
+        }
 
-        [MenuItem( "Tools/Commands/Centered Parent of Selections %g" )]
+        [MenuItem( "Tools/Commands/Centered Parent of Selections (1 Parent) %g" )]
         public static void MakeParentForSelectedObjects ()
         {
             if ( Selection.gameObjects.Length == 0 )
@@ -248,7 +273,7 @@ namespace UtilityScripts
             Transform transform = Selection.activeGameObject.transform;
             Transform parent = transform.parent;
             string path = transform.name;
-            while( parent != null && !parent.GetComponent<Page>())
+            while ( parent != null && !parent.GetComponent<Page>() )
             {
                 path = parent.name + "/" + path;
                 parent = parent.parent;

@@ -19,7 +19,7 @@ public class TrianglePrinter : MonoBehaviour
             if (  meshFilter.transform.root.name == "HigherVertexCount" )
                 continue;
 
-            if ( !pairs.ContainsKey( meshFilter.gameObject) )
+            if ( !pairs.ContainsKey( meshFilter.gameObject) && meshFilter.gameObject && meshFilter.sharedMesh )
                 pairs.Add( meshFilter.gameObject , meshFilter.sharedMesh.vertexCount );
         }
 

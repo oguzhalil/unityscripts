@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UtilityScripts
 {
-    public class BaseAudioPlayer : Singleton<BaseAudioPlayer>
+    public class BaseAudioPlayer : UniqueSingleton<BaseAudioPlayer>
     {
         [NonSerialized] [EnumType(typeof(int))] public EnumObject [] audioSources;
         [NonSerialized] public EnumObject [] audioDatas;
