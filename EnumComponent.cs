@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Runtime.InteropServices;
+using UnityEditor.SceneManagement;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -11,8 +12,8 @@ using UnityEditor;
 
 public class EnumComponent : MonoBehaviour
 {
-    [HideInInspector] public int enumAsInt;
-    [HideInInspector] public int enumTypeAsInt = 0;
+    public int enumAsInt;
+    public int enumTypeAsInt = 0;
 
     public T GetValue<T> ()
     {
@@ -67,9 +68,17 @@ public class EnumComponent : MonoBehaviour
                 return;
             }
 
+            EditorGUI.BeginChangeCheck();
+
             var enumType = ( Enum ) Enum.ToObject( enums [ enumComponent.enumTypeAsInt ] , enumComponent.enumAsInt );
             enumType = EditorGUILayout.EnumPopup( new GUIContent( "Enum Value" ) , enumType );
             enumComponent.enumAsInt = Convert.ToInt32( enumType );
+
+            if ( EditorGUI.EndChangeCheck() )
+            {
+                PrefabUtility.RecordPrefabInstancePropertyModifications( enumComponent );
+                EditorSceneManager.MarkSceneDirty( EditorSceneManager.GetActiveScene() );
+            }
 
             serializedObject.ApplyModifiedProperties();
         }
