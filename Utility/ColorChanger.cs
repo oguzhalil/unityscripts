@@ -35,6 +35,7 @@ public class ColorChanger : MonoBehaviour
     };
     public enum Type { INSTANT, TIME, TWEEN, IMAGE }
     private bool bInitialized;
+    [NonSerialized]public bool bDefault = true;
 
     private void Start ()
     {
@@ -132,6 +133,8 @@ public class ColorChanger : MonoBehaviour
             default:
                 break;
         }
+
+        bDefault = false;
     }
 
     public void ToDefault ()
@@ -160,6 +163,8 @@ public class ColorChanger : MonoBehaviour
             default:
                 break;
         }
+
+        bDefault = true;
     }
 
 

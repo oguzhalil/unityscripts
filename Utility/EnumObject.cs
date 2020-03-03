@@ -16,3 +16,10 @@ public class EnumType : PropertyAttribute
         this.type = type;
     }
 }
+
+//[CreateAssetMenu( fileName = "EnumAssetInstance" , menuName = "Assets/Custom/Enum Asset" , order = 1 )]
+//public class EnumAsset : ScriptableObject
+//{
+//    pub
+
+//}

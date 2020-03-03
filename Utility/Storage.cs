@@ -26,7 +26,7 @@ namespace UtilityScript
         {
             if ( !PlayerPrefs.HasKey( key ) )
             {
-                Debug.LogError( "Storage : the given key's value pair does not exist! key:  " + key );
+                Debug.Log( "Storage : the given key's value pair does not exist! key:  " + key );
                 return false;
             }
 
@@ -58,7 +58,7 @@ namespace UtilityScript
         {
             if ( !PlayerPrefs.HasKey( key ) )
             {
-                Debug.LogError( "Storage : the given key's value pair does not exist! key:  " + key );
+                Debug.Log( "Storage : the given key's value pair does not exist! key:  " + key );
                 return false;
             }
 

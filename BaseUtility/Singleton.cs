@@ -4,6 +4,7 @@ namespace UtilityScripts
 {
     // Refer to : Curiously Recurring Template Pattern ( CRTP) 
     // C# Generics
+    [DefaultExecutionOrder(-1)]
     public class Singleton<T> : MonoBehaviour where T : Singleton<T> 
     {
         public static T Instance { private set; get; }
@@ -21,6 +22,7 @@ namespace UtilityScripts
         }
     }
 
+    [DefaultExecutionOrder( -1 )]
     public class UniqueSingleton<T> : MonoBehaviour where T : UniqueSingleton<T>
     {
         public static T Instance { private set; get; }

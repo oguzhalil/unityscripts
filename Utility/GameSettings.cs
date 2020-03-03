@@ -35,9 +35,6 @@ namespace UtilityScripts
                 QualitySettings.SetQualityLevel( 2 , true );
                 Debug.Log( $"Graphic Device is { SystemInfo.graphicsDeviceVersion } setting quality level to {QualitySettings.names [ 2 ]} " );
             }
-
-            //ListenForGCModeChange();
-            //DisableGC();
         }
 
         public void SetBuffer ( VSync vSync )
