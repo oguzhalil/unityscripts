@@ -30,17 +30,17 @@ public class SetColliderByDistance : MonoBehaviour
 
     private void Update ()
     {
-        if ( RCC_SceneManager.Instance.activePlayerVehicle )
-        {
-            if ( Vector3.Distance( bounds.center , RCC_SceneManager.Instance.activePlayerVehicle.transform.position ) < bounds.extents.magnitude * 1.5f && !active )
-            {
-                Activate();
-            }
-            else if ( active )
-            {
-                Deactivate();
-            }
-        }
+        //if ( RCC_SceneManager.Instance.activePlayerVehicle )
+        //{
+        //    if ( Vector3.Distance( bounds.center , RCC_SceneManager.Instance.activePlayerVehicle.transform.position ) < bounds.extents.magnitude * 1.5f && !active )
+        //    {
+        //        Activate();
+        //    }
+        //    else if ( active )
+        //    {
+        //        Deactivate();
+        //    }
+        //}
     }
 
     private void Deactivate ()

@@ -11,14 +11,14 @@ public class MonoBehaviourStateEvents : MonoBehaviour
 
     private void OnEnable ()
     {
-        if(DevelopmentScript.m_bActive && SceneController.Is("Menu"))
-        {
-            DevelopmentScript.queuedOperations.Enqueue( uEventOnEnable );
-        }
-        else
-        {
-            uEventOnEnable.SafeInvoke();
-        }
+        //if(DevelopmentScript.m_bActive && SceneController.Is("Menu"))
+        //{
+        //    DevelopmentScript.queuedOperations.Enqueue( uEventOnEnable );
+        //}
+        //else
+        //{
+        //    uEventOnEnable.SafeInvoke();
+        //}
     }
 
     private void OnDisable ()

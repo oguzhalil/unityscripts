@@ -207,6 +207,12 @@ public class DuplicateSpecial : EditorWindow
         {
             if ( Selection.activeGameObject && Selection.activeGameObject.GetComponentsInChildren<MeshRenderer>().Length > 0 )
             {
+
+                if (space == Space.Global)
+                {
+
+                }
+
                 var vector = indexToDirection( Mathf.Abs( ( int ) dir ) );
                 //Debug.Log( vector );
                 Handles.color = Color.white;
